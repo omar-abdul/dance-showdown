@@ -29,7 +29,7 @@ function TimeBox({ timeLeft }: { timeLeft: number }) {
               } as PIXI.TextStyle)
             : timeLeftTextStyle
         }
-        x={innerWidth - 25}
+        x={innerWidth - 28}
         y={10}
       />
     </>

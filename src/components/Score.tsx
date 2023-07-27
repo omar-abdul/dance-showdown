@@ -1,5 +1,6 @@
-import { Text } from "@pixi/react";
+import { Container, Sprite, Text } from "@pixi/react";
 import * as PIXI from "pixi.js";
+import placeholder from "../assets/avatar.svg";
 
 // Define a custom text style for the score and time left
 const scoreTextStyle = new PIXI.TextStyle({
@@ -15,17 +16,28 @@ const scoreTextStyle = new PIXI.TextStyle({
   wordWrapWidth: 200, // Adjust the wordWrapWidth as needed
 });
 
-function Score({ scores, playerId }: { scores: object; playerId: string }) {
+function Score({
+  scores,
+  playerId,
+  avatar,
+}: {
+  scores: object;
+  playerId: string;
+  avatar: string;
+}) {
   return (
-    <>
+    <Container>
       {/* Score */}
+
+      <Sprite image={avatar ? avatar : placeholder} scale={0.1} y={30} />
+
       <Text
-        text={`Score: ${scores[playerId as keyof typeof scores]}`}
+        text={` : ${scores[playerId as keyof typeof scores]}`}
         style={scoreTextStyle}
-        x={10}
-        y={50}
+        x={35}
+        y={40}
       />
-    </>
+    </Container>
   );
 }
 

@@ -20,28 +20,31 @@ function DanceStage() {
   const [playing, setIsPlaying] = useState<boolean>(true);
   const [playerId, setPlayerId] = useState<string>("");
   const [prompt, setPrompt] = useState<string>("");
+  const [allPlayers, setPlayers] =
+    useState<
+      Record<
+        string,
+        { playerId: string; displayName: string; avatarUrl: string }
+      >
+    >();
 
   const containerRef = useRef(null);
 
   const { gameOver } = game ?? { gameOver: false };
+  const currentPrompt = game?.prompts[playerId];
 
   useEffect(() => {
-    // setPrompt("question");
-    // console.log("prompts :" + game?.prompts[playerId]);
-    // game?.prompts[playerId] &&
-    //   setTimeout(() => {
-    //     setPrompt(game?.prompts[playerId]);
-    //   }, 200);
-
     sound.cheer.duration(1 / 4);
     sound.gasp.duration(1 / 2);
 
     Rune.initClient({
-      onChange: ({ newGame, yourPlayerId, action }) => {
+      onChange: ({ newGame, yourPlayerId, action, players }) => {
         setGame(newGame);
         setPlayerId(yourPlayerId || "");
 
         setTimeLeft(newGame?.time[yourPlayerId || ""]);
+
+        setPlayers(players);
         if (action?.action === "handleClick" && newGame.fail === false) {
           sound.cheer.play();
         } else if (action?.action === "handleClick" && newGame.fail == true) {
@@ -52,9 +55,15 @@ function DanceStage() {
         if (newGame.gameOver) sound.gasp.play();
       },
     });
-  }, [gameOver, game?.songNumber]);
+  }, []);
 
   useEffect(() => {
+    setPrompt("question");
+
+    currentPrompt &&
+      setTimeout(() => {
+        setPrompt(currentPrompt);
+      }, 200);
     game?.songNumber &&
       sound[`song${game.songNumber}` as keyof typeof sound].play();
     if (gameOver && game?.songNumber) {
@@ -118,11 +127,12 @@ function DanceStage() {
 
     const interval = setInterval(updateBackgroundDotColors, 500);
     window.addEventListener("resize", resize);
+
     return () => {
       window.removeEventListener("resize", resize);
       clearInterval(interval);
     };
-  }, [gameOver, game?.songNumber]);
+  }, [gameOver, game?.songNumber, currentPrompt]);
 
   const totalIcons = 4; // Total number of icons
   const iconWidth = 48; // Width of each icon
@@ -173,7 +183,17 @@ function DanceStage() {
         <Prompt direction={prompt} x={innerWidth / 2} y={40} />
       )}
 
-      {game?.scores && <Score scores={game?.scores} playerId={playerId} />}
+      {game?.scores && (
+        <Score
+          scores={game?.scores}
+          playerId={playerId}
+          avatar={
+            (allPlayers &&
+              allPlayers[playerId as keyof typeof allPlayers].avatarUrl) ||
+            ""
+          }
+        />
+      )}
 
       <TimeBox timeLeft={timeLeft} />
       {/* Arrow icons */}

@@ -70,18 +70,21 @@ Rune.initLogic({
       }
     },
   },
-  update: ({ game }) => {
-    game.playerIds.map((id) => {
-      if (10 - (Rune.gameTimeInSeconds() - game.roundStartAt[id]) === 0) {
+  update: ({ game, allPlayerIds }) => {
+    for (let i = 0; i < allPlayerIds.length; i++) {
+      if (
+        10 - (Rune.gameTimeInSeconds() - game.roundStartAt[allPlayerIds[i]]) ===
+        0
+      ) {
         game.gameOver = true;
         Rune.gameOver({
           players: game.scores,
-          delayPopUp: true,
         });
       } else {
-        game.time[id] = 10 - (Rune.gameTimeInSeconds() - game.roundStartAt[id]);
+        game.time[allPlayerIds[i]] =
+          10 - (Rune.gameTimeInSeconds() - game.roundStartAt[allPlayerIds[i]]);
       }
-    });
+    }
   },
   events: {
     playerJoined: (playerId, { game }) => {
