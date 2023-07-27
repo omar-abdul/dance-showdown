@@ -1,5 +1,6 @@
 import { Text } from "@pixi/react";
 import * as PIXI from "pixi.js";
+import AlarmClock from "./Clock";
 
 const timeLeftTextStyle = new PIXI.TextStyle({
   fontFamily: "Arial",
@@ -15,19 +16,23 @@ const timeLeftTextStyle = new PIXI.TextStyle({
 
 function TimeBox({ timeLeft }: { timeLeft: number }) {
   return (
-    <Text
-      text={`Time Left: ${timeLeft}`}
-      style={
-        timeLeft <= 3
-          ? ({
-              ...timeLeftTextStyle,
-              fill: ["#ff0000", "#ff0000"],
-            } as PIXI.TextStyle)
-          : timeLeftTextStyle
-      }
-      x={innerWidth - 100}
-      y={10}
-    />
+    <>
+      <AlarmClock />
+
+      <Text
+        text={`${timeLeft}s`}
+        style={
+          timeLeft <= 3
+            ? ({
+                ...timeLeftTextStyle,
+                fill: ["#ff0000", "#ff0000"],
+              } as PIXI.TextStyle)
+            : timeLeftTextStyle
+        }
+        x={innerWidth - 25}
+        y={10}
+      />
+    </>
   );
 }
 

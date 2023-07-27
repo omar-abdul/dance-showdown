@@ -17,7 +17,6 @@ export interface GameState {
 }
 
 type GameActions = {
-  // startGame: () => void;
   handleClick: (params: { direction: string; player: string }) => void;
 };
 
@@ -43,7 +42,6 @@ Rune.initLogic({
     return {
       session: Math.round(Math.random() * 1e9),
       scores,
-
       roundStartAt,
       animation: "idle",
       gameOver: false,
@@ -59,9 +57,7 @@ Rune.initLogic({
     handleClick: ({ direction, player }, { game, playerId }) => {
       if (direction === game.prompts[playerId]) {
         game.scores[player] = game.scores[playerId] + 10;
-
         game.prompts[player] = setRandomPrompt();
-
         game.roundStartAt[player] = Rune.gameTimeInSeconds();
         game.time[player] = 10;
         game.fail = false;
@@ -83,7 +79,6 @@ Rune.initLogic({
           delayPopUp: true,
         });
       } else {
-        // console.log(`game time ${id}:${game.roundStartAt[id]}`);
         game.time[id] = 10 - (Rune.gameTimeInSeconds() - game.roundStartAt[id]);
       }
     });
@@ -91,6 +86,7 @@ Rune.initLogic({
   events: {
     playerJoined: (playerId, { game }) => {
       // Handle player joined
+
       game.scores[playerId] = 0;
       game.time[playerId] = 10;
       game.roundStartAt[playerId] = Rune.gameTimeInSeconds();

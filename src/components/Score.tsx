@@ -3,15 +3,14 @@ import * as PIXI from "pixi.js";
 
 // Define a custom text style for the score and time left
 const scoreTextStyle = new PIXI.TextStyle({
-  fontFamily: "Arial",
-  fontSize: 24,
-  fill: ["#ffffff", "#00aaff"], // You can use gradient fill for a more appealing look
-  stroke: "#000000",
-  strokeThickness: 2,
-  dropShadow: true,
-  dropShadowColor: "#000000",
-  dropShadowBlur: 4,
-  dropShadowDistance: 2,
+  dropShadowColor: "#77767b",
+  fill: "#ff7800",
+  fontFamily: "Comic Sans MS",
+  fontSize: 18,
+  fontVariant: "small-caps",
+  fontWeight: "500",
+  padding: 13,
+  stroke: "#f6f5f4",
   wordWrap: true,
   wordWrapWidth: 200, // Adjust the wordWrapWidth as needed
 });
