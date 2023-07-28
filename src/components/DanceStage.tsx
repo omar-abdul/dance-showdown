@@ -13,7 +13,7 @@ import TimeBox from "./Time";
 function DanceStage() {
   const [game, setGame] = useState<GameState>();
   const [frames, setFrames] = useState<PIXI.Texture<PIXI.Resource>[]>([]);
-  const [timeLeft, setTimeLeft] = useState<number>(10);
+  const [timeLeft, setTimeLeft] = useState<number>();
   const [innerWidth, setInnerWidth] = useState<number>(window.innerWidth);
   const [innerHeight, setInnerHeight] = useState<number>(window.innerHeight);
   const [backgroundDotColors, setBackgroundDotColors] = useState<number[]>([]);
@@ -64,16 +64,11 @@ function DanceStage() {
       setTimeout(() => {
         setPrompt(currentPrompt);
       }, 200);
-    game?.songNumber &&
-      sound[`song${game.songNumber}` as keyof typeof sound].play();
-    if (gameOver && game?.songNumber) {
-      sound[`song${game?.songNumber}` as keyof typeof sound].stop();
-    }
 
     setIsPlaying(false);
     const danceFrames: PIXI.Texture<PIXI.Resource>[] = [];
     const failFrames: PIXI.Texture<PIXI.Resource>[] = [];
-    PIXI.Assets.load("/spritesheet.json").then(() => {
+    PIXI.Assets.load("spritesheet.json").then(() => {
       for (let i = 2; i < 14; i++) {
         danceFrames.push(PIXI.Texture.from(`dance_${i}.png`));
       }
@@ -132,8 +127,15 @@ function DanceStage() {
       window.removeEventListener("resize", resize);
       clearInterval(interval);
     };
-  }, [gameOver, game?.songNumber, currentPrompt]);
+  }, [gameOver, currentPrompt]);
 
+  useEffect(() => {
+    game?.songNumber &&
+      sound[`song${game.songNumber}` as keyof typeof sound].play();
+    if (gameOver && game?.songNumber) {
+      sound[`song${game?.songNumber}` as keyof typeof sound].stop();
+    }
+  }, [gameOver, game?.songNumber]);
   const totalIcons = 4; // Total number of icons
   const iconWidth = 48; // Width of each icon
   const spacing = (innerWidth - totalIcons * iconWidth) / (totalIcons + 1) + 10;
@@ -171,10 +173,11 @@ function DanceStage() {
         />
       )}
       <Sprite
-        image={"/crowd.png"}
+        image={"crowd.png"}
         anchor={0.5}
-        x={innerWidth}
-        y={innerHeight / 2 + 40}
+        scale={0.4}
+        x={innerWidth / 2}
+        y={innerHeight / 2 + 80}
       />
 
       {/* UI elements */}
@@ -195,7 +198,7 @@ function DanceStage() {
         />
       )}
 
-      <TimeBox timeLeft={timeLeft} />
+      {timeLeft && <TimeBox timeLeft={timeLeft} />}
       {/* Arrow icons */}
 
       <ArrowIcon

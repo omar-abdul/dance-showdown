@@ -24,7 +24,7 @@ function ArrowIcon({
 
   return (
     <Sprite
-      image={`/${imageName}.png`}
+      image={`${imageName}.png`}
       anchor={0.5}
       x={x}
       y={y}

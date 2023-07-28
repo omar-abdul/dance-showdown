@@ -9,7 +9,7 @@ const scoreTextStyle = new PIXI.TextStyle({
   fontFamily: "Comic Sans MS",
   fontSize: 18,
   fontVariant: "small-caps",
-  fontWeight: "500",
+  fontWeight: "900",
   padding: 13,
   stroke: "#f6f5f4",
   wordWrap: true,
@@ -32,7 +32,7 @@ function Score({
       <Sprite image={avatar ? avatar : placeholder} scale={0.1} y={30} />
 
       <Text
-        text={` : ${scores[playerId as keyof typeof scores]}`}
+        text={`  ${scores[playerId as keyof typeof scores]}`}
         style={scoreTextStyle}
         x={35}
         y={40}

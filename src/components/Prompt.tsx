@@ -11,7 +11,7 @@ function Prompt({
 }) {
   return (
     <Sprite
-      image={`/prompts_${direction}.png`}
+      image={`prompts_${direction}.png`}
       scale={0.5}
       anchor={0.5}
       x={x}
