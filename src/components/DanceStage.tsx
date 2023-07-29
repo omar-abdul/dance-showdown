@@ -10,7 +10,6 @@ import Prompt from "./Prompt";
 import Score from "./Score";
 import TimeBox from "./Time";
 
-import background from "../assets/images/bg-2.jpeg";
 import { ROUND_1 } from "../lib/rounds";
 import { sound } from "../lib/sounds";
 
