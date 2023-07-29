@@ -52,10 +52,10 @@ function DanceStage() {
   }>();
 
   const [bg, setBg] = useState<any>("");
-  const [loadingScreen, setLoadingScreen] = useState<any>();
+  // const [loadingScreen, setLoadingScreen] = useState<any>();
   const [crowdSprite, setCrowdSprite] = useState<any>();
   const [uiElements, setUIElements] = useState<any>();
-  const [loadingBg, setLoadingBg] = useState<any>();
+  // const [loadingBg, setLoadingBg] = useState<any>();
   const [stageLight, setStageLight] = useState<PIXI.Texture<PIXI.Resource>[]>(
     []
   );
@@ -85,22 +85,24 @@ function DanceStage() {
     //   setFailFrames(frame2);
     // });
 
-    async function loadScreen() {
-      try {
-        const loadingBg = await PIXI.Assets.loadBundle("bg-loading");
-        setLoadingBg(loadingBg);
-        const { load } = await PIXI.Assets.loadBundle("loading");
-        const loadSprite = await new PIXI.Spritesheet(
-          PIXI.BaseTexture.from(load.data.meta.image),
-          load.data
-        );
-        await loadSprite.parse();
+    // async function loadScreen() {
+    //   try {
+    //     const loadingBg = await PIXI.Assets.loadBundle("loading");
+    //     //console.log(loadingBg);
+    //     setLoadingBg(loadingBg["bg-loading"]);
+    //     const { load } = await PIXI.Assets.loadBundle("loading");
+    //     const loadSprite = await new PIXI.Spritesheet(
+    //       PIXI.BaseTexture.from(load.data.meta.image),
+    //       load.data
+    //     );
 
-        setLoadingScreen(loadSprite.animations.loading);
-      } catch (error) {
-        console.log(error);
-      }
-    }
+    //     await loadSprite.parse();
+    //     // console.log(loadSprite.animations.loading);
+    //     setLoadingScreen(loadSprite.animations.loading);
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // }
 
     async function load() {
       async function init() {
@@ -117,7 +119,7 @@ function DanceStage() {
       } catch (error) {
         console.error(error);
       }
-      loadScreen();
+      // loadScreen();
     }
     load();
   }, []);
@@ -154,7 +156,7 @@ function DanceStage() {
         console.log(error);
       }
     }
-    loadGame().then(() => {
+    loadGame().then(async () => {
       sound.cheer.duration(1 / 4);
       sound.gasp.duration(1 / 2);
       loadScreenRemove();
@@ -193,7 +195,8 @@ function DanceStage() {
         },
       });
     });
-  }, []);
+    if (!game?.gameStarted) Rune.actions.gameStarted();
+  }, [game?.gameStarted]);
 
   useEffect(() => {
     if (!gameOver) {
@@ -201,10 +204,12 @@ function DanceStage() {
     } else {
       setFrames(failFrames);
     }
+
     gameOver === false && setKeyValue(Math.random() * 1e6);
   }, [gameOver, danceFrames, failFrames]);
 
   useEffect(() => {
+    Rune.actions.gameStarted();
     function resize() {
       setInnerWidth(window.innerWidth);
       setInnerHeight(window.innerHeight);
@@ -293,19 +298,6 @@ function DanceStage() {
       width={innerWidth}
       height={innerHeight}
     >
-      {loadingScreen && loadingBg && (
-        <Container ref={loadContainerRef}>
-          <Sprite x={innerWidth} y={innerHeight} anchor={0.5} />
-          <AnimatedSprite
-            isPlaying={true}
-            texture={loadingScreen}
-            anchor={0.5}
-            scale={0.5}
-            x={innerWidth / 2}
-            y={innerHeight / 2}
-          />
-        </Container>
-      )}
       <Container
         ref={containerRef}
         onpointerdown={handleTouchStart}

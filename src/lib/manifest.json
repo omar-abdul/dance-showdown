@@ -37,7 +37,7 @@
         },
         {
           "name": "clock",
-          "srcs": "src/assets/images/clock.png"
+          "srcs": "clock.png"
         },
         {
           "name": "prompt_up",
@@ -71,7 +71,7 @@
         },
         {
           "name": "stage",
-          "srcs": "src/assets/images/bg-2.jpeg"
+          "srcs": "bg-2.jpeg"
         },
         {
           "name": "spotlight",

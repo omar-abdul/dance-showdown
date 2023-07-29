@@ -16,10 +16,12 @@ export interface GameState {
   prompts: Record<string, string>;
   time: Record<string, number>;
   subtractBy: Record<string, number>;
+  gameStarted: boolean;
 }
 
 type GameActions = {
   handleClick: (params: { direction: string; player: string }) => void;
+  gameStarted: () => void;
 };
 
 declare global {
@@ -55,6 +57,7 @@ Rune.initLogic({
       fail: false,
       prompts,
       time,
+      gameStarted: false,
     };
   },
   actions: {
@@ -73,6 +76,13 @@ Rune.initLogic({
         Rune.gameOver({
           players: game.scores,
         });
+      }
+    },
+    gameStarted: (_, { game, allPlayerIds }) => {
+      game.gameStarted = true;
+      for (const player of allPlayerIds) {
+        game.roundStartAt[player] = Rune.gameTimeInSeconds();
+        game.prompts[player] = setRandomPrompt();
       }
     },
   },
