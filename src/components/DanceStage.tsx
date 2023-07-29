@@ -156,7 +156,7 @@ function DanceStage() {
         console.log(error);
       }
     }
-    loadGame().then(async () => {
+    loadGame().then(() => {
       sound.cheer.duration(1 / 4);
       sound.gasp.duration(1 / 2);
       loadScreenRemove();
@@ -195,8 +195,7 @@ function DanceStage() {
         },
       });
     });
-    if (!game?.gameStarted) Rune.actions.gameStarted();
-  }, [game?.gameStarted]);
+  }, []);
 
   useEffect(() => {
     if (!gameOver) {
@@ -204,7 +203,6 @@ function DanceStage() {
     } else {
       setFrames(failFrames);
     }
-
     gameOver === false && setKeyValue(Math.random() * 1e6);
   }, [gameOver, danceFrames, failFrames]);
 
@@ -222,6 +220,9 @@ function DanceStage() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!game?.gameStarted) Rune.actions.gameStarted();
+  }, [game?.gameStarted]);
   useEffect(() => {
     game?.songNumber &&
       sound[`song${game.songNumber}` as keyof typeof sound].play();
