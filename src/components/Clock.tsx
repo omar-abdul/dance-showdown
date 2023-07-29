@@ -1,8 +1,14 @@
 import { Sprite } from "@pixi/react";
-import clock from "../assets/clock.png";
+// import clock from "../assets/images/clock.png";
 
-function AlarmClock() {
-  return <Sprite x={innerWidth - 60} y={2} image={clock} scale={0.2} />;
+function AlarmClock({
+  innerWidth,
+  uiElements,
+}: {
+  innerWidth: number;
+  uiElements: any;
+}) {
+  return <Sprite x={innerWidth - 60} y={5} texture={uiElements.clock} />;
 }
 
 export default AlarmClock;

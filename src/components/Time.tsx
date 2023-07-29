@@ -14,10 +14,18 @@ const timeLeftTextStyle = new PIXI.TextStyle({
   dropShadowDistance: 2,
 });
 
-function TimeBox({ timeLeft }: { timeLeft: number }) {
+function TimeBox({
+  timeLeft,
+  innerWidth,
+  uiElements,
+}: {
+  timeLeft: number;
+  innerWidth: number;
+  uiElements: any;
+}) {
   return (
     <>
-      <AlarmClock />
+      <AlarmClock innerWidth={innerWidth} uiElements={uiElements} />
 
       <Text
         text={`${timeLeft}s`}
@@ -29,7 +37,7 @@ function TimeBox({ timeLeft }: { timeLeft: number }) {
               } as PIXI.TextStyle)
             : timeLeftTextStyle
         }
-        x={innerWidth - 28}
+        x={innerWidth - 30}
         y={10}
       />
     </>

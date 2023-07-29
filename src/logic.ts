@@ -1,5 +1,6 @@
 import type { RuneClient } from "rune-games-sdk/multiplayer";
 import { setRandomPrompt } from "./lib/prompts";
+import { ROUND_1, ROUND_2, ROUND_3 } from "./lib/rounds";
 
 export interface GameState {
   scores: Record<string, number>;
@@ -17,9 +18,6 @@ export interface GameState {
   subtractBy: Record<string, number>;
 }
 
-const round1 = 12;
-const round2 = 6;
-const round3 = 3;
 type GameActions = {
   handleClick: (params: { direction: string; player: string }) => void;
 };
@@ -40,9 +38,9 @@ Rune.initLogic({
     for (const players of playerIds) {
       scores[players] = 0;
       prompts[players] = setRandomPrompt();
-      time[players] = round1;
+      time[players] = ROUND_1;
       roundStartAt[players] = Rune.gameTimeInSeconds();
-      subtractBy[players] = round1;
+      subtractBy[players] = ROUND_1;
     }
 
     return {
@@ -67,6 +65,7 @@ Rune.initLogic({
         game.roundStartAt[player] = Rune.gameTimeInSeconds();
         game.time[player] = game.subtractBy[player];
         game.fail = false;
+        game.gameOver = false;
       } else {
         game.gameOver = true;
         game.fail = true;
@@ -91,13 +90,13 @@ Rune.initLogic({
       } else {
         switch (true) {
           case game.scores[allPlayerIds[i]] > 120:
-            game.subtractBy[allPlayerIds[i]] = round3;
+            game.subtractBy[allPlayerIds[i]] = ROUND_3;
             break;
           case game.scores[allPlayerIds[i]] > 70:
-            game.subtractBy[allPlayerIds[i]] = round2;
+            game.subtractBy[allPlayerIds[i]] = ROUND_2;
             break;
           default:
-            game.subtractBy[allPlayerIds[i]] = round1;
+            game.subtractBy[allPlayerIds[i]] = ROUND_1;
         }
 
         game.time[allPlayerIds[i]] =
@@ -109,10 +108,11 @@ Rune.initLogic({
   events: {
     playerJoined: (playerId, { game }) => {
       // Handle player joined
+      if (game.gameOver) return;
       if (playerId) game.playerIds.push(playerId);
       for (let i = 0; i < game.playerIds.length; i++) {
         game.scores[game.playerIds[i]] = 0;
-        game.time[game.playerIds[i]] = round1;
+        game.time[game.playerIds[i]] = ROUND_1;
         game.roundStartAt[game.playerIds[i]] = Rune.gameTimeInSeconds();
         game.prompts[game.playerIds[i]] = setRandomPrompt();
       }
@@ -124,7 +124,7 @@ Rune.initLogic({
 
       // for (let i = 0; i < game.playerIds.length; i++) {
       //   game.scores[game.playerIds[i]] = 0;
-      //   game.time[game.playerIds[i]] = round1;
+      //   game.time[game.playerIds[i]] = ROUND_1;
       //   game.roundStartAt[game.playerIds[i]] = Rune.gameTimeInSeconds();
       //   game.prompts[game.playerIds[i]] = setRandomPrompt();
       // }

@@ -1,0 +1,105 @@
+{
+  "bundles": [
+    {
+      "name": "ui_elements",
+      "assets": [
+        {
+          "name": "up",
+          "srcs": "up.png"
+        },
+        {
+          "name": "right",
+          "srcs": "right.png"
+        },
+        {
+          "name": "down",
+          "srcs": "down.png"
+        },
+        {
+          "name": "left",
+          "srcs": "left.png"
+        },
+        {
+          "name": "up_pressed",
+          "srcs": "up_pressed.png"
+        },
+        {
+          "name": "left_pressed",
+          "srcs": "left_pressed.png"
+        },
+        {
+          "name": "right_pressed",
+          "srcs": "right_pressed.png"
+        },
+        {
+          "name": "down_pressed",
+          "srcs": "down_pressed.png"
+        },
+        {
+          "name": "clock",
+          "srcs": "src/assets/images/clock.png"
+        },
+        {
+          "name": "prompt_up",
+          "srcs": "prompts_up.png"
+        },
+        {
+          "name": "prompt_down",
+          "srcs": "prompts_down.png"
+        },
+        {
+          "name": "prompt_left",
+          "srcs": "prompts_left.png"
+        },
+        {
+          "name": "prompt_right",
+          "srcs": "prompts_right.png"
+        },
+        {
+          "name": "prompt_question",
+          "srcs": "prompts_question.png"
+        }
+      ]
+    },
+
+    {
+      "name": "background",
+      "assets": [
+        {
+          "name": "crowd",
+          "srcs": "crowd.png"
+        },
+        {
+          "name": "stage",
+          "srcs": "src/assets/images/bg-2.jpeg"
+        },
+        {
+          "name": "spotlight",
+          "srcs": "spotlight.json"
+        }
+      ]
+    },
+    {
+      "name": "character",
+      "assets": [
+        {
+          "name": "spritesheet",
+          "srcs": "spritesheet.json"
+        }
+      ]
+    },
+    {
+      "name": "loading",
+      "assets": [
+        {
+          "name": "load",
+          "srcs": "loading.json"
+        },
+        {
+          "name": "bg-loading",
+          "srcs": "bg-loading.png"
+        }
+      ]
+    }
+  ]
+}

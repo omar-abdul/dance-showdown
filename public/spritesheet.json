@@ -152,7 +152,7 @@
       "dance_12.png",
       "dance_13.png"
     ],
-    "fail": ["fail_1.png", "fail_2.png", "fail_3.png", "fail_4.png"]
+    "fail": ["fail_1.png"]
   },
   "meta": {
     "app": "https://www.codeandweb.com/texturepacker",

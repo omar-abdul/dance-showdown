@@ -1,11 +1,12 @@
 import { Container, Sprite, Text } from "@pixi/react";
 import * as PIXI from "pixi.js";
-import placeholder from "../assets/avatar.svg";
+import placeholder from "../assets/images/avatar.svg";
+import circleBorder from "../assets/images/circle.png";
 
 // Define a custom text style for the score and time left
 const scoreTextStyle = new PIXI.TextStyle({
   dropShadowColor: "#77767b",
-  fill: "#ff7800",
+  fill: "#673AB7",
   fontFamily: "Comic Sans MS",
   fontSize: 18,
   fontVariant: "small-caps",
@@ -28,15 +29,24 @@ function Score({
   return (
     <Container>
       {/* Score */}
-
-      <Sprite image={avatar ? avatar : placeholder} scale={0.1} y={30} />
-
-      <Text
-        text={`  ${scores[playerId as keyof typeof scores]}`}
-        style={scoreTextStyle}
-        x={35}
-        y={40}
+      <Sprite image={circleBorder} y={30} anchor={0.5} x={25} scale={0.87} />
+      <Sprite
+        image={avatar ? avatar : placeholder}
+        y={30}
+        x={25}
+        width={40}
+        height={40}
+        anchor={0.5}
       />
+
+      {playerId && (
+        <Text
+          text={`  ${scores[playerId as keyof typeof scores]}`}
+          style={scoreTextStyle}
+          x={35}
+          y={20}
+        />
+      )}
     </Container>
   );
 }
