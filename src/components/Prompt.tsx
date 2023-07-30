@@ -8,25 +8,31 @@ function Prompt({
   y,
   roundNumber,
   uiElements,
+  freeRound,
 }: {
   direction: string;
   x: number;
   y: number;
   roundNumber: number;
   uiElements: any;
+  freeRound: boolean;
 }) {
   const [isHidden, setIsHidden] = useState<boolean>(false);
 
   useEffect(() => {
-    let timeOut: number = ROUND_1;
-    if (roundNumber === ROUND_1) timeOut = 300;
-    else if (roundNumber === ROUND_2) timeOut = 150;
-    else if (roundNumber === ROUND_3) timeOut = 100;
-    setIsHidden(false);
-    setTimeout(() => {
-      setIsHidden(true);
-    }, timeOut);
-  }, [direction, roundNumber]);
+    if (!freeRound) {
+      if (uiElements) {
+        let timeOut: number = ROUND_1;
+        if (roundNumber === ROUND_1) timeOut = 700;
+        else if (roundNumber === ROUND_2) timeOut = 400;
+        else if (roundNumber === ROUND_3) timeOut = 300;
+        setIsHidden(false);
+        setTimeout(() => {
+          setIsHidden(true);
+        }, timeOut);
+      }
+    }
+  }, [direction, roundNumber, uiElements, freeRound]);
 
   return (
     <>

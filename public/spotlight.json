@@ -1,40 +1,39 @@
+{"frames": {
+
+"stage_1.png":
 {
-  "frames": {
-    "spot-light-1.png": {
-      "frame": { "x": 0, "y": 0, "w": 669, "h": 524 },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": { "x": 0, "y": 0, "w": 669, "h": 524 },
-      "sourceSize": { "w": 669, "h": 524 },
-      "anchor": { "x": 0.5, "y": 0.5 }
-    },
-    "spot-light-2.png": {
-      "frame": { "x": 669, "y": 0, "w": 669, "h": 524 },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": { "x": 0, "y": 0, "w": 669, "h": 524 },
-      "sourceSize": { "w": 669, "h": 524 },
-      "anchor": { "x": 0.5, "y": 0.5 }
-    },
-    "spotlight-3.png": {
-      "frame": { "x": 1338, "y": 0, "w": 669, "h": 524 },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": { "x": 0, "y": 0, "w": 669, "h": 524 },
-      "sourceSize": { "w": 669, "h": 524 },
-      "anchor": { "x": 0.5, "y": 0.5 }
-    }
-  },
-  "animations": {
-    "spot-light": ["spot-light-1.png", "spot-light-2.png"]
-  },
-  "meta": {
-    "app": "https://www.codeandweb.com/texturepacker",
-    "version": "1.1",
-    "image": "./spotlight.png",
-    "format": "RGBA8888",
-    "size": { "w": 2007, "h": 524 },
-    "scale": "1",
-    "smartupdate": "$TexturePacker:SmartUpdate:bb19cdca32e26ccaa76c42c233e8b57b:84b5caafb44981edbe6a7c2bb57bf9f6:653bccdadac9102a44ab56943414249c$"
-  }
+	"frame": {"x":0,"y":0,"w":700,"h":498},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":700,"h":498},
+	"sourceSize": {"w":700,"h":498}
+},
+"stage_2.png":
+{
+	"frame": {"x":0,"y":498,"w":700,"h":498},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":700,"h":498},
+	"sourceSize": {"w":700,"h":498}
+},
+"stage_3.png":
+{
+	"frame": {"x":0,"y":996,"w":700,"h":498},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":700,"h":498},
+	"sourceSize": {"w":700,"h":498}
+}},
+"animations": {
+	"stage": ["stage_1.png","stage_2.png","stage_3.png"]
+},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.1",
+	"image": "spotlight.png",
+	"format": "RGBA8888",
+	"size": {"w":700,"h":1494},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:7eea1dd8a434b1a59cbe274365f18a19:2fd3142b95eeba7426a53e09441479f4:653bccdadac9102a44ab56943414249c$"
+}
 }

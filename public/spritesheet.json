@@ -1,166 +1,190 @@
 {
   "frames": {
-    "dance_2.png": {
+    "dance-1.png": {
       "frame": { "x": 0, "y": 0, "w": 214, "h": 201 },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": { "x": 0, "y": 0, "w": 214, "h": 201 },
-      "sourceSize": { "w": 214, "h": 201 },
-      "anchor": { "x": 0.5, "y": 0.5 }
+      "sourceSize": { "w": 214, "h": 201 }
     },
-    "dance_3.png": {
+    "dance-2.png": {
       "frame": { "x": 214, "y": 0, "w": 214, "h": 201 },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": { "x": 0, "y": 0, "w": 214, "h": 201 },
-      "sourceSize": { "w": 214, "h": 201 },
-      "anchor": { "x": 0.5, "y": 0.5 }
+      "sourceSize": { "w": 214, "h": 201 }
     },
-    "dance_4.png": {
+    "dance-3.png": {
       "frame": { "x": 428, "y": 0, "w": 214, "h": 201 },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": { "x": 0, "y": 0, "w": 214, "h": 201 },
-      "sourceSize": { "w": 214, "h": 201 },
-      "anchor": { "x": 0.5, "y": 0.5 }
+      "sourceSize": { "w": 214, "h": 201 }
     },
-    "dance_5.png": {
+    "dance-4.png": {
       "frame": { "x": 642, "y": 0, "w": 214, "h": 201 },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": { "x": 0, "y": 0, "w": 214, "h": 201 },
-      "sourceSize": { "w": 214, "h": 201 },
-      "anchor": { "x": 0.5, "y": 0.5 }
+      "sourceSize": { "w": 214, "h": 201 }
     },
-    "dance_6.png": {
-      "frame": { "x": 856, "y": 0, "w": 214, "h": 201 },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": { "x": 0, "y": 0, "w": 214, "h": 201 },
-      "sourceSize": { "w": 214, "h": 201 },
-      "anchor": { "x": 0.5, "y": 0.5 }
-    },
-    "dance_7.png": {
-      "frame": { "x": 1070, "y": 0, "w": 214, "h": 201 },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": { "x": 0, "y": 0, "w": 214, "h": 201 },
-      "sourceSize": { "w": 214, "h": 201 },
-      "anchor": { "x": 0.5, "y": 0.5 }
-    },
-    "dance_8.png": {
-      "frame": { "x": 1284, "y": 0, "w": 214, "h": 201 },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": { "x": 0, "y": 0, "w": 214, "h": 201 },
-      "sourceSize": { "w": 214, "h": 201 },
-      "anchor": { "x": 0.5, "y": 0.5 }
-    },
-    "dance_9.png": {
-      "frame": { "x": 1498, "y": 0, "w": 214, "h": 201 },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": { "x": 0, "y": 0, "w": 214, "h": 201 },
-      "sourceSize": { "w": 214, "h": 201 },
-      "anchor": { "x": 0.5, "y": 0.5 }
-    },
-    "dance_10.png": {
-      "frame": { "x": 1712, "y": 0, "w": 214, "h": 201 },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": { "x": 0, "y": 0, "w": 214, "h": 201 },
-      "sourceSize": { "w": 214, "h": 201 },
-      "anchor": { "x": 0.5, "y": 0.5 }
-    },
-    "dance_11.png": {
+    "dance-5.png": {
       "frame": { "x": 0, "y": 201, "w": 214, "h": 201 },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": { "x": 0, "y": 0, "w": 214, "h": 201 },
-      "sourceSize": { "w": 214, "h": 201 },
-      "anchor": { "x": 0.5, "y": 0.5 }
+      "sourceSize": { "w": 214, "h": 201 }
     },
-    "dance_12.png": {
+    "dance-6.png": {
       "frame": { "x": 214, "y": 201, "w": 214, "h": 201 },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": { "x": 0, "y": 0, "w": 214, "h": 201 },
-      "sourceSize": { "w": 214, "h": 201 },
-      "anchor": { "x": 0.5, "y": 0.5 }
+      "sourceSize": { "w": 214, "h": 201 }
     },
-    "dance_13.png": {
+    "dance-7.png": {
       "frame": { "x": 428, "y": 201, "w": 214, "h": 201 },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": { "x": 0, "y": 0, "w": 214, "h": 201 },
-      "sourceSize": { "w": 214, "h": 201 },
-      "anchor": { "x": 0.5, "y": 0.5 }
+      "sourceSize": { "w": 214, "h": 201 }
     },
-    "fail_1.png": {
+    "dance-8.png": {
       "frame": { "x": 642, "y": 201, "w": 214, "h": 201 },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": { "x": 0, "y": 0, "w": 214, "h": 201 },
-      "sourceSize": { "w": 214, "h": 201 },
-      "anchor": { "x": 0.5, "y": 0.5 }
+      "sourceSize": { "w": 214, "h": 201 }
     },
-    "fail_2.png": {
-      "frame": { "x": 856, "y": 201, "w": 214, "h": 201 },
+    "dance-9.png": {
+      "frame": { "x": 0, "y": 402, "w": 214, "h": 201 },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": { "x": 0, "y": 0, "w": 214, "h": 201 },
-      "sourceSize": { "w": 214, "h": 201 },
-      "anchor": { "x": 0.5, "y": 0.5 }
+      "sourceSize": { "w": 214, "h": 201 }
     },
-    "fail_3.png": {
-      "frame": { "x": 1070, "y": 201, "w": 214, "h": 201 },
+    "dance-10.png": {
+      "frame": { "x": 214, "y": 402, "w": 214, "h": 201 },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": { "x": 0, "y": 0, "w": 214, "h": 201 },
-      "sourceSize": { "w": 214, "h": 201 },
-      "anchor": { "x": 0.5, "y": 0.5 }
+      "sourceSize": { "w": 214, "h": 201 }
     },
-    "fail_4.png": {
-      "frame": { "x": 1284, "y": 201, "w": 214, "h": 201 },
+    "dance-11.png": {
+      "frame": { "x": 428, "y": 402, "w": 214, "h": 201 },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": { "x": 0, "y": 0, "w": 214, "h": 201 },
-      "sourceSize": { "w": 214, "h": 201 },
-      "anchor": { "x": 0.5, "y": 0.5 }
+      "sourceSize": { "w": 214, "h": 201 }
     },
-    "idle.png": {
-      "frame": { "x": 1498, "y": 201, "w": 214, "h": 201 },
+    "dance-12.png": {
+      "frame": { "x": 642, "y": 402, "w": 214, "h": 201 },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": { "x": 0, "y": 0, "w": 214, "h": 201 },
-      "sourceSize": { "w": 214, "h": 201 },
-      "anchor": { "x": 0.5, "y": 0.5 }
+      "sourceSize": { "w": 214, "h": 201 }
+    },
+    "dance-13.png": {
+      "frame": { "x": 0, "y": 603, "w": 214, "h": 201 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 214, "h": 201 },
+      "sourceSize": { "w": 214, "h": 201 }
+    },
+    "dance-14.png": {
+      "frame": { "x": 214, "y": 603, "w": 214, "h": 201 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 214, "h": 201 },
+      "sourceSize": { "w": 214, "h": 201 }
+    },
+    "dance-15.png": {
+      "frame": { "x": 428, "y": 603, "w": 214, "h": 201 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 214, "h": 201 },
+      "sourceSize": { "w": 214, "h": 201 }
+    },
+    "dance-16.png": {
+      "frame": { "x": 642, "y": 603, "w": 214, "h": 201 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 214, "h": 201 },
+      "sourceSize": { "w": 214, "h": 201 }
+    },
+    "dance-17.png": {
+      "frame": { "x": 0, "y": 804, "w": 214, "h": 201 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 214, "h": 201 },
+      "sourceSize": { "w": 214, "h": 201 }
+    },
+    "dance-18.png": {
+      "frame": { "x": 214, "y": 804, "w": 214, "h": 201 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 214, "h": 201 },
+      "sourceSize": { "w": 214, "h": 201 }
+    },
+    "fail-1.png": {
+      "frame": { "x": 428, "y": 804, "w": 214, "h": 201 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 214, "h": 201 },
+      "sourceSize": { "w": 214, "h": 201 }
+    },
+    "fail-2.png": {
+      "frame": { "x": 642, "y": 804, "w": 214, "h": 201 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 214, "h": 201 },
+      "sourceSize": { "w": 214, "h": 201 }
+    },
+    "fail-3.png": {
+      "frame": { "x": 0, "y": 1005, "w": 214, "h": 201 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 214, "h": 201 },
+      "sourceSize": { "w": 214, "h": 201 }
+    },
+    "fail-4.png": {
+      "frame": { "x": 214, "y": 1005, "w": 214, "h": 201 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 214, "h": 201 },
+      "sourceSize": { "w": 214, "h": 201 }
     }
   },
   "animations": {
     "dance": [
-      "dance_2.png",
-      "dance_3.png",
-      "dance_4.png",
-      "dance_5.png",
-      "dance_6.png",
-      "dance_7.png",
-      "dance_8.png",
-      "dance_9.png",
-      "dance_10.png",
-      "dance_11.png",
-      "dance_12.png",
-      "dance_13.png"
+      "dance-1.png",
+      "dance-2.png",
+      "dance-3.png",
+      "dance-4.png",
+      "dance-5.png",
+      "dance-6.png",
+      "dance-7.png",
+      "dance-8.png",
+      "dance-9.png",
+      "dance-10.png",
+      "dance-11.png",
+      "dance-12.png",
+      "dance-13.png",
+      "dance-14.png",
+      "dance-15.png",
+      "dance-16.png",
+      "dance-17.png",
+      "dance-18.png"
     ],
-    "fail": ["fail_1.png"]
+    "fail": ["fail-1.png", "fail-2.png", "fail-3.png", "fail-4.png"]
   },
   "meta": {
     "app": "https://www.codeandweb.com/texturepacker",
     "version": "1.1",
-    "image": "./spritesheet.png",
+    "image": "spritesheet.png",
     "format": "RGBA8888",
-    "size": { "w": 1926, "h": 402 },
+    "size": { "w": 856, "h": 1206 },
     "scale": "1",
-    "smartupdate": "$TexturePacker:SmartUpdate:2b226fb1c9765636e52485afcf82c1da:bd103cc3f031b4baadbbca5e1c937a0e:729adc6043343cfda41c447ce8f464d6$"
+    "smartupdate": "$TexturePacker:SmartUpdate:68ebc508f73134faf03bb5b72702c995:604f4955297a1adc01431b4f9b082f99:42e475aa4a03af306bdc7acb5ff91d19$"
   }
 }

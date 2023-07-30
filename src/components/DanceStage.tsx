@@ -10,7 +10,8 @@ import Prompt from "./Prompt";
 import Score from "./Score";
 import TimeBox from "./Time";
 
-import { ROUND_1 } from "../lib/rounds";
+import { ROUND_1, ROUND_2, ROUND_3 } from "../lib/rounds";
+
 import { sound } from "../lib/sounds";
 
 import FadingText from "./StageText";
@@ -59,10 +60,9 @@ function DanceStage() {
   const [stageLight, setStageLight] = useState<PIXI.Texture<PIXI.Resource>[]>(
     []
   );
+  const [animationSpeed, setAnimationSpeed] = useState<number>(1);
 
   const containerRef = useRef(null);
-
-  const loadContainerRef = useRef<PIXI.Container>(null);
 
   const { gameOver } = game ?? {};
   const round = game?.subtractBy[playerId];
@@ -147,7 +147,7 @@ function DanceStage() {
           background.spotlight.data
         );
         await stageFrame.parse();
-        setStageLight(stageFrame.animations["spot-light"]);
+        setStageLight(stageFrame.animations["stage"]);
 
         for (const i in sound) {
           sound[i as keyof typeof sound].load();
@@ -159,55 +159,20 @@ function DanceStage() {
     loadGame().then(() => {
       sound.cheer.duration(1 / 4);
       sound.gasp.duration(1 / 2);
-      loadScreenRemove();
-
-      Rune.initClient({
-        onChange: ({ newGame, yourPlayerId, action, players }) => {
-          setGame(newGame);
-          setPlayerId(yourPlayerId || "");
-
-          setTimeLeft(newGame?.time[yourPlayerId || ""]);
-
-          setPlayers(players);
-          if (action?.action === "handleClick" && newGame.fail === false) {
-            sound.cheer.play();
-
-            const list = [
-              "Good Job",
-              "Great Work",
-              "Triple Threat!!!",
-              "You Got This",
-              "Look at you Go!",
-              "On a Roll",
-            ];
-            const text = list[Math.floor(Math.random() * list.length)];
-            setIsShowing({ playerId: yourPlayerId || "", isShowing: true });
-
-            setFadingText(() => text);
-            setTimeout(() => {
-              setIsShowing({ playerId: yourPlayerId || "", isShowing: false });
-            }, 500);
-          } else if (action?.action === "handleClick" && newGame.fail == true) {
-            sound.cheer.stop();
-            sound.gasp.play();
-          }
-          if (newGame.gameOver) sound.gasp.play();
-        },
-      });
+      // loadScreenRemove();
     });
   }, []);
 
   useEffect(() => {
-    if (!gameOver) {
+    if (!game?.gameOver) {
       setFrames(danceFrames);
     } else {
       setFrames(failFrames);
     }
-    gameOver === false && setKeyValue(Math.random() * 1e6);
-  }, [gameOver, danceFrames, failFrames]);
+    game?.gameOver === false && setKeyValue(Math.random() * 1e6);
+  }, [game?.gameOver, danceFrames, failFrames]);
 
   useEffect(() => {
-    Rune.actions.gameStarted();
     function resize() {
       setInnerWidth(window.innerWidth);
       setInnerHeight(window.innerHeight);
@@ -221,19 +186,48 @@ function DanceStage() {
   }, []);
 
   useEffect(() => {
-    if (!game?.gameStarted) Rune.actions.gameStarted();
-  }, [game?.gameStarted]);
-  useEffect(() => {
     game?.songNumber &&
       sound[`song${game.songNumber}` as keyof typeof sound].play();
-    if (gameOver && game?.songNumber) {
+    if (game?.gameOver && game?.songNumber) {
       sound[`song${game?.songNumber}` as keyof typeof sound].stop();
     }
-  }, [game?.songNumber, gameOver]);
+  }, [game?.songNumber, game?.gameOver]);
 
-  function loadScreenRemove() {
-    loadContainerRef.current && loadContainerRef.current.destroy();
-  }
+  useEffect(() => {
+    Rune.initClient({
+      onChange: ({ newGame, yourPlayerId, action, players }) => {
+        setGame(newGame);
+        setPlayerId(yourPlayerId || "");
+
+        setTimeLeft(newGame?.time[yourPlayerId || ""]);
+
+        setPlayers(players);
+        if (action?.action === "handleClick" && newGame.fail === false) {
+          sound.cheer.play();
+
+          const list = [
+            "Good Job",
+            "Great Work",
+            "Triple Threat!!!",
+            "You Got This",
+            "Look at you Go!",
+            "On a Roll",
+          ];
+          const text = list[Math.floor(Math.random() * list.length)];
+          setIsShowing({ playerId: yourPlayerId || "", isShowing: true });
+
+          setFadingText(() => text);
+          setTimeout(() => {
+            setIsShowing({ playerId: yourPlayerId || "", isShowing: false });
+          }, 500);
+        } else if (action?.action === "handleClick" && newGame.fail == true) {
+          sound.cheer.stop();
+          sound.gasp.play();
+        }
+        if (newGame.gameOver) sound.gasp.play();
+      },
+    });
+  }, []);
 
   const totalIcons = 4; // Total number of icons
   const iconWidth = 48; // Width of each icon
@@ -310,34 +304,40 @@ function DanceStage() {
         {bg && (
           <Sprite
             texture={bg}
-            scale={0.4}
             anchor={0.5}
             position={[innerWidth / 2, innerHeight / 2]}
           />
         )}
 
-        {/* DanceStage animation */}
-        {frames.length > 0 && (
-          <AnimatedSprite
-            isPlaying={true}
-            textures={frames}
-            animationSpeed={0.15}
-            position={[innerWidth / 2, innerHeight / 2]}
-            scale={0.7}
-            loop={true}
-            ref={animatedSpriteRef}
-            onFrameChange={() => animatedSpriteRef.current?.play()}
-          />
-        )}
         {stageLight.length > 0 && (
           <AnimatedSprite
             isPlaying={true}
             textures={stageLight}
             animationSpeed={0.1}
-            position={[innerWidth / 2, 40]}
-            scale={0.4}
+            position={[innerWidth / 2, 100]}
             ref={stageLightRef}
+            anchor={0.5}
             onFrameChange={() => stageLightRef.current?.play()}
+          />
+        )}
+        {/* DanceStage animation */}
+        {frames.length > 0 && (
+          <AnimatedSprite
+            isPlaying={true}
+            textures={frames}
+            animationSpeed={
+              game?.subtractBy[playerId] &&
+              game?.subtractBy[playerId] < ROUND_2 &&
+              !game.gameOver
+                ? 0.2
+                : 0.15
+            }
+            position={[innerWidth / 2, innerHeight / 2]}
+            scale={0.7}
+            loop={true}
+            anchor={0.5}
+            ref={animatedSpriteRef}
+            onFrameChange={() => animatedSpriteRef.current?.play()}
           />
         )}
 
@@ -352,6 +352,7 @@ function DanceStage() {
               roundNumber={round || ROUND_1}
               uiElements={uiElements}
               key={keyValue}
+              freeRound={game?.freeRound[playerId]}
             />
           )}
           {isShowing && (

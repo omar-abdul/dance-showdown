@@ -8,7 +8,13 @@ function AlarmClock({
   innerWidth: number;
   uiElements: any;
 }) {
-  return <Sprite x={innerWidth - 60} y={5} texture={uiElements.clock} />;
+  return (
+    <>
+      {uiElements?.clock && (
+        <Sprite x={innerWidth - 60} y={5} texture={uiElements?.clock} />
+      )}
+    </>
+  );
 }
 
 export default AlarmClock;

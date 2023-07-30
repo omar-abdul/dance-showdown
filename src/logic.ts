@@ -17,6 +17,7 @@ export interface GameState {
   time: Record<string, number>;
   subtractBy: Record<string, number>;
   gameStarted: boolean;
+  freeRound: Record<string, boolean>;
 }
 
 type GameActions = {
@@ -37,12 +38,14 @@ Rune.initLogic({
     const time: Record<string, number> = {};
     const roundStartAt: Record<string, number> = {};
     const subtractBy: Record<string, number> = {};
+    const freeRound: Record<string, boolean> = {};
     for (const players of playerIds) {
       scores[players] = 0;
       prompts[players] = setRandomPrompt();
       time[players] = ROUND_1;
       roundStartAt[players] = Rune.gameTimeInSeconds();
       subtractBy[players] = ROUND_1;
+      freeRound[players] = true;
     }
 
     return {
@@ -53,11 +56,12 @@ Rune.initLogic({
       gameOver: false,
       subtractBy,
       playerIds,
-      songNumber: Math.ceil(Math.random() * 4),
+      songNumber: Math.ceil(Math.random() * 2),
       fail: false,
       prompts,
       time,
       gameStarted: false,
+      freeRound,
     };
   },
   actions: {
@@ -69,6 +73,7 @@ Rune.initLogic({
         game.time[player] = game.subtractBy[player];
         game.fail = false;
         game.gameOver = false;
+        if (game.scores[player] > 30) game.freeRound[player] = false;
       } else {
         game.gameOver = true;
         game.fail = true;
@@ -88,30 +93,33 @@ Rune.initLogic({
   },
   update: ({ game, allPlayerIds }) => {
     for (let i = 0; i < allPlayerIds.length; i++) {
-      if (
-        game.subtractBy[allPlayerIds[i]] -
-          (Rune.gameTimeInSeconds() - game.roundStartAt[allPlayerIds[i]]) <=
-        0
-      ) {
-        game.gameOver = true;
-        Rune.gameOver({
-          players: game.scores,
-        });
-      } else {
-        switch (true) {
-          case game.scores[allPlayerIds[i]] > 120:
-            game.subtractBy[allPlayerIds[i]] = ROUND_3;
-            break;
-          case game.scores[allPlayerIds[i]] > 70:
-            game.subtractBy[allPlayerIds[i]] = ROUND_2;
-            break;
-          default:
-            game.subtractBy[allPlayerIds[i]] = ROUND_1;
-        }
-
-        game.time[allPlayerIds[i]] =
+      if (game.freeRound[allPlayerIds[i]]) return;
+      else {
+        if (
           game.subtractBy[allPlayerIds[i]] -
-          (Rune.gameTimeInSeconds() - game.roundStartAt[allPlayerIds[i]]);
+            (Rune.gameTimeInSeconds() - game.roundStartAt[allPlayerIds[i]]) <=
+          0
+        ) {
+          game.gameOver = true;
+          Rune.gameOver({
+            players: game.scores,
+          });
+        } else {
+          switch (true) {
+            case game.scores[allPlayerIds[i]] > 120:
+              game.subtractBy[allPlayerIds[i]] = ROUND_3;
+              break;
+            case game.scores[allPlayerIds[i]] > 70:
+              game.subtractBy[allPlayerIds[i]] = ROUND_2;
+              break;
+            default:
+              game.subtractBy[allPlayerIds[i]] = ROUND_1;
+          }
+
+          game.time[allPlayerIds[i]] =
+            game.subtractBy[allPlayerIds[i]] -
+            (Rune.gameTimeInSeconds() - game.roundStartAt[allPlayerIds[i]]);
+        }
       }
     }
   },
