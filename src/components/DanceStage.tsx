@@ -1,4 +1,4 @@
-import { Ref, useEffect, useRef, useState } from "react";
+import { Ref, useCallback, useEffect, useRef, useState } from "react";
 import { Container, AnimatedSprite, Sprite, Stage } from "@pixi/react";
 import * as PIXI from "pixi.js";
 
@@ -10,7 +10,7 @@ import Prompt from "./Prompt";
 import Score from "./Score";
 import TimeBox from "./Time";
 
-import { ROUND_1, ROUND_2, ROUND_3 } from "../lib/rounds";
+import { ROUND_1, ROUND_2 } from "../lib/rounds";
 
 import { sound } from "../lib/sounds";
 
@@ -23,7 +23,7 @@ function DanceStage() {
   const [timeLeft, setTimeLeft] = useState<number>();
 
   const [playerId, setPlayerId] = useState<string>("");
-  // const [prompt, setPrompt] = useState<string>("");
+
   const [allPlayers, setPlayers] =
     useState<
       Record<
@@ -52,15 +52,14 @@ function DanceStage() {
     isShowing: boolean;
   }>();
 
-  const [bg, setBg] = useState<any>("");
-  // const [loadingScreen, setLoadingScreen] = useState<any>();
-  const [crowdSprite, setCrowdSprite] = useState<any>();
-  const [uiElements, setUIElements] = useState<any>();
-  // const [loadingBg, setLoadingBg] = useState<any>();
+  const [bg, setBg] = useState<PIXI.Texture<PIXI.Resource>>();
+
+  const [crowdSprite, setCrowdSprite] = useState<PIXI.Texture<PIXI.Resource>>();
+  const [uiElements, setUIElements] = useState<PIXI.Texture<PIXI.Resource>>();
+
   const [stageLight, setStageLight] = useState<PIXI.Texture<PIXI.Resource>[]>(
     []
   );
-  const [animationSpeed, setAnimationSpeed] = useState<number>(1);
 
   const containerRef = useRef(null);
 
@@ -71,39 +70,6 @@ function DanceStage() {
   const stageLightRef: Ref<PIXI.AnimatedSprite> = useRef(null);
 
   useEffect(() => {
-    // PIXI.Assets.load("spritesheet.json").then(() => {
-    //   const frame1 = [],
-    //     frame2 = [];
-    //   for (let i = 2; i < 14; i++) {
-    //     frame1.push(PIXI.Texture.from(`dance_${i}.png`));
-    //   }
-
-    //   for (let i = 1; i < 5; i++) {
-    //     frame2.push(PIXI.Texture.from(`fail_${i}.png`));
-    //   }
-    //   setDanceFrames(frame1);
-    //   setFailFrames(frame2);
-    // });
-
-    // async function loadScreen() {
-    //   try {
-    //     const loadingBg = await PIXI.Assets.loadBundle("loading");
-    //     //console.log(loadingBg);
-    //     setLoadingBg(loadingBg["bg-loading"]);
-    //     const { load } = await PIXI.Assets.loadBundle("loading");
-    //     const loadSprite = await new PIXI.Spritesheet(
-    //       PIXI.BaseTexture.from(load.data.meta.image),
-    //       load.data
-    //     );
-
-    //     await loadSprite.parse();
-    //     // console.log(loadSprite.animations.loading);
-    //     setLoadingScreen(loadSprite.animations.loading);
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
-    // }
-
     async function load() {
       async function init() {
         await PIXI.Assets.init({ manifest });
@@ -156,12 +122,17 @@ function DanceStage() {
         console.log(error);
       }
     }
-    loadGame().then(() => {
-      sound.cheer.duration(1 / 4);
-      sound.gasp.duration(1 / 2);
-      // loadScreenRemove();
-    });
+    loadGame();
   }, []);
+  const handleArrowClick = useCallback(
+    ({ direction, playerId }: { direction: string; playerId: string }) => {
+      if (gameOver) return;
+      Rune.actions.handleClick({ direction, player: playerId });
+
+      gameOver === false && setKeyValue(Math.random() * 1e6);
+    },
+    [gameOver] // Add the dependencies here (if any) that should trigger a recreation of the memoized function
+  );
 
   useEffect(() => {
     if (!game?.gameOver) {
@@ -178,12 +149,34 @@ function DanceStage() {
       setInnerHeight(window.innerHeight);
     }
 
+    function checkKey(e: KeyboardEvent) {
+      let direction = "";
+      console.log(e.key === "ArrowLeft");
+      switch (e.key) {
+        case "ArrowLeft":
+          direction = "left";
+          break;
+        case "ArrowRight":
+          direction = "right";
+          break;
+        case "ArrowDown":
+          direction = "down";
+          break;
+        case "ArrowUp":
+          direction = "up";
+          break;
+      }
+      handleArrowClick({ direction, playerId });
+    }
+
     window.addEventListener("resize", resize);
+    window.addEventListener("keydown", checkKey);
 
     return () => {
       window.removeEventListener("resize", resize);
+      window.removeEventListener("keydown", checkKey);
     };
-  }, []);
+  }, [playerId, handleArrowClick]);
 
   useEffect(() => {
     game?.songNumber &&
@@ -197,9 +190,11 @@ function DanceStage() {
     Rune.initClient({
       onChange: ({ newGame, yourPlayerId, action, players }) => {
         setGame(newGame);
-        setPlayerId(yourPlayerId || "");
+        if (yourPlayerId) {
+          setPlayerId(yourPlayerId);
 
-        setTimeLeft(newGame?.time[yourPlayerId || ""]);
+          setTimeLeft(newGame?.time[yourPlayerId]);
+        }
 
         setPlayers(players);
         if (action?.action === "handleClick" && newGame.fail === false) {
@@ -214,12 +209,14 @@ function DanceStage() {
             "On a Roll",
           ];
           const text = list[Math.floor(Math.random() * list.length)];
-          setIsShowing({ playerId: yourPlayerId || "", isShowing: true });
+          yourPlayerId &&
+            setIsShowing({ playerId: yourPlayerId, isShowing: true });
 
           setFadingText(() => text);
-          setTimeout(() => {
-            setIsShowing({ playerId: yourPlayerId || "", isShowing: false });
-          }, 500);
+          yourPlayerId &&
+            setTimeout(() => {
+              setIsShowing({ playerId: yourPlayerId, isShowing: false });
+            }, 500);
         } else if (action?.action === "handleClick" && newGame.fail == true) {
           sound.cheer.stop();
           sound.gasp.play();
@@ -271,173 +268,166 @@ function DanceStage() {
     return;
   }
 
-  function handleArrowClick({
-    direction,
-    playerId,
-  }: {
-    direction: string;
-    playerId: string;
-  }) {
-    if (gameOver) return;
-    Rune.actions.handleClick({ direction, player: playerId });
-
-    gameOver === false && setKeyValue(Math.random() * 1e6);
-  }
-
   return (
-    <Stage
-      options={{
-        background: 0xeef1f5,
-        autoDensity: true,
-      }}
-      width={innerWidth}
-      height={innerHeight}
-    >
-      <Container
-        ref={containerRef}
-        onpointerdown={handleTouchStart}
-        onpointermove={handleTouchMove}
-        onpointerupoutside={handleTouchEndOutside}
-        onpointerup={handleTouchEnd}
-        eventMode="static"
+    <div>
+      <Stage
+        options={{
+          background: 0xeef1f5,
+          autoDensity: true,
+        }}
+        width={innerWidth}
+        height={innerHeight}
       >
-        {bg && (
-          <Sprite
-            texture={bg}
-            anchor={0.5}
-            position={[innerWidth / 2, innerHeight / 2]}
-          />
-        )}
-
-        {stageLight.length > 0 && (
-          <AnimatedSprite
-            isPlaying={true}
-            textures={stageLight}
-            animationSpeed={0.1}
-            position={[innerWidth / 2, 100]}
-            ref={stageLightRef}
-            anchor={0.5}
-            onFrameChange={() => stageLightRef.current?.play()}
-          />
-        )}
-        {/* DanceStage animation */}
-        {frames.length > 0 && (
-          <AnimatedSprite
-            isPlaying={true}
-            textures={frames}
-            animationSpeed={
-              game?.subtractBy[playerId] &&
-              game?.subtractBy[playerId] < ROUND_2 &&
-              !game.gameOver
-                ? 0.2
-                : 0.15
-            }
-            position={[innerWidth / 2, innerHeight / 2]}
-            scale={0.7}
-            loop={true}
-            anchor={0.5}
-            ref={animatedSpriteRef}
-            onFrameChange={() => animatedSpriteRef.current?.play()}
-          />
-        )}
-
-        {/* UI elements */}
-        {/* Prompt */}
-        <Container position={[0, 0]}>
-          {game?.prompts[playerId] && uiElements && (
-            <Prompt
-              direction={game?.prompts[playerId]}
-              x={innerWidth / 2}
-              y={40}
-              roundNumber={round || ROUND_1}
-              uiElements={uiElements}
-              key={keyValue}
-              freeRound={game?.freeRound[playerId]}
-            />
-          )}
-          {isShowing && (
-            <FadingText
-              x={innerWidth / 2 - 40}
-              y={80}
-              text={fadingText}
-              isShowing={isShowing}
-              playerId={playerId}
+        <Container
+          ref={containerRef}
+          onpointerdown={handleTouchStart}
+          onpointermove={handleTouchMove}
+          onpointerupoutside={handleTouchEndOutside}
+          onpointerup={handleTouchEnd}
+          eventMode="static"
+        >
+          {bg && (
+            <Sprite
+              texture={bg}
+              anchor={0.5}
+              position={[innerWidth / 2, innerHeight / 2]}
             />
           )}
 
-          {game?.scores && (
-            <Score
-              scores={game?.scores}
-              playerId={playerId}
-              avatar={
-                (allPlayers &&
-                  playerId &&
-                  allPlayers[playerId as keyof typeof allPlayers].avatarUrl) ||
-                ""
-              }
+          {stageLight.length > 0 && (
+            <AnimatedSprite
+              isPlaying={true}
+              textures={stageLight}
+              animationSpeed={0.1}
+              position={[innerWidth / 2, 100]}
+              ref={stageLightRef}
+              anchor={0.5}
+              onFrameChange={() => stageLightRef.current?.play()}
             />
           )}
-          {timeLeft && (
-            <TimeBox
-              timeLeft={timeLeft}
-              innerWidth={innerWidth}
-              uiElements={uiElements}
-            />
-          )}
+
+          {/* Prompt */}
+          <Container position={[0, 0]}>
+            {game?.prompts[playerId] && uiElements && (
+              <Prompt
+                direction={game?.prompts[playerId]}
+                x={innerWidth / 2}
+                y={60}
+                roundNumber={round || ROUND_1}
+                uiElements={uiElements}
+                key={keyValue}
+                freeRound={game?.freeRound[playerId]}
+              />
+            )}
+
+            {/* DanceStage animation */}
+            {frames.length > 0 && (
+              <AnimatedSprite
+                isPlaying={true}
+                textures={frames}
+                animationSpeed={
+                  game?.subtractBy[playerId] &&
+                  game?.subtractBy[playerId] < ROUND_2 &&
+                  !game.gameOver
+                    ? 0.2
+                    : 0.15
+                }
+                position={[innerWidth / 2, innerHeight / 2]}
+                scale={0.7}
+                loop={true}
+                anchor={0.5}
+                ref={animatedSpriteRef}
+                onFrameChange={() => animatedSpriteRef.current?.play()}
+              />
+            )}
+
+            {/* UI elements */}
+
+            {isShowing && (
+              <FadingText
+                x={innerWidth / 2 - 40}
+                y={120}
+                text={fadingText}
+                isShowing={isShowing}
+                playerId={playerId}
+              />
+            )}
+
+            {game?.scores && (
+              <Score
+                scores={game?.scores}
+                playerId={playerId}
+                avatar={
+                  (allPlayers &&
+                    playerId &&
+                    allPlayers[playerId as keyof typeof allPlayers]
+                      .avatarUrl) ||
+                  ""
+                }
+              />
+            )}
+            {timeLeft && (
+              <TimeBox
+                timeLeft={timeLeft}
+                innerWidth={innerWidth}
+                uiElements={uiElements}
+              />
+            )}
+          </Container>
         </Container>
-      </Container>
-      {/* Arrow icons */}
-      <Container>
-        <SwipeLine start={startPoint} end={endPoint} isSwiping={isSwiping} />
-        {crowdSprite && (
-          <Sprite
-            texture={crowdSprite}
-            anchor={0.5}
-            scale={0.8}
-            x={innerWidth / 2}
-            y={innerHeight + 30}
-          />
-        )}
-        <>
-          {uiElements && (
-            <>
-              <ArrowIcon
-                handleClick={handleArrowClick}
-                direction="up"
-                y={innerHeight - 100}
-                x={spacing}
-                playerId={playerId}
-                uiElements={uiElements}
-              />
-              <ArrowIcon
-                handleClick={handleArrowClick}
-                direction="left"
-                y={innerHeight - 100}
-                x={spacing + 1 * (iconWidth + spacing)}
-                playerId={playerId}
-                uiElements={uiElements}
-              />
-              <ArrowIcon
-                handleClick={handleArrowClick}
-                direction="right"
-                y={innerHeight - 100}
-                x={spacing + 2 * (iconWidth + spacing)}
-                playerId={playerId}
-                uiElements={uiElements}
-              />
-              <ArrowIcon
-                handleClick={handleArrowClick}
-                direction="down"
-                y={innerHeight - 100}
-                x={spacing + 3 * (iconWidth + spacing)}
-                playerId={playerId}
-                uiElements={uiElements}
-              />
-            </>
+        {/* Arrow icons */}
+        <Container>
+          <SwipeLine start={startPoint} end={endPoint} isSwiping={isSwiping} />
+          {crowdSprite && (
+            <Sprite
+              texture={crowdSprite}
+              anchor={0.5}
+              scale={0.8}
+              x={innerWidth / 2}
+              y={innerHeight + 30}
+            />
           )}
-        </>
-      </Container>
-    </Stage>
+          <>
+            {uiElements && (
+              <>
+                <ArrowIcon
+                  handleClick={handleArrowClick}
+                  direction="up"
+                  y={innerHeight - 100}
+                  x={spacing}
+                  playerId={playerId}
+                  uiElements={uiElements}
+                />
+                <ArrowIcon
+                  handleClick={handleArrowClick}
+                  direction="left"
+                  y={innerHeight - 100}
+                  x={spacing + 1 * (iconWidth + spacing)}
+                  playerId={playerId}
+                  uiElements={uiElements}
+                />
+                <ArrowIcon
+                  handleClick={handleArrowClick}
+                  direction="right"
+                  y={innerHeight - 100}
+                  x={spacing + 2 * (iconWidth + spacing)}
+                  playerId={playerId}
+                  uiElements={uiElements}
+                />
+                <ArrowIcon
+                  handleClick={handleArrowClick}
+                  direction="down"
+                  y={innerHeight - 100}
+                  x={spacing + 3 * (iconWidth + spacing)}
+                  playerId={playerId}
+                  uiElements={uiElements}
+                />
+              </>
+            )}
+          </>
+        </Container>
+      </Stage>
+    </div>
   );
 }
 export default DanceStage;

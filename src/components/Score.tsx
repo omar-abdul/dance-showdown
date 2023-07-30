@@ -5,14 +5,14 @@ import circleBorder from "../assets/images/circle.png";
 
 // Define a custom text style for the score and time left
 const scoreTextStyle = new PIXI.TextStyle({
-  dropShadowColor: "#77767b",
   fill: "#673AB7",
   fontFamily: "Comic Sans MS",
-  fontSize: 18,
+  fontSize: 16,
   fontVariant: "small-caps",
   fontWeight: "900",
-  padding: 13,
-  stroke: "#f6f5f4",
+
+  stroke: "#ffffff",
+  strokeThickness: 4,
   wordWrap: true,
   wordWrapWidth: 200, // Adjust the wordWrapWidth as needed
 });
@@ -26,14 +26,16 @@ function Score({
   playerId: string;
   avatar: string;
 }) {
+  const x = 30;
+  const y = 25;
   return (
     <Container>
       {/* Score */}
       <Sprite image={circleBorder} y={30} anchor={0.5} x={25} scale={0.87} />
       <Sprite
         image={avatar ? avatar : placeholder}
-        y={30}
-        x={25}
+        y={x}
+        x={y}
         width={40}
         height={40}
         anchor={0.5}
@@ -43,8 +45,9 @@ function Score({
         <Text
           text={`  ${scores[playerId as keyof typeof scores]}`}
           style={scoreTextStyle}
-          x={35}
-          y={20}
+          x={x - 10}
+          y={y + 25}
+          anchor={0.5}
         />
       )}
     </Container>

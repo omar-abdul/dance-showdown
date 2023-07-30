@@ -1,17 +1,6 @@
 Dance Frenzy Game, 
 
-# Things to add
-    1. Change background image ---done
-    2. add swipe--done
-    3. fix player exit bug --done
-    4. change animation --done
-    5. add swipe gesture  line showing --done
-    6. add reward like good,great --done
-    7. change mechanic of game to hiding the direction for more competetivness --done
-    8. fix animation bug--done
-    9. Increase the crowd size --done
-    10. add stage lights --done
-    11. Put the image credits --done
+
 
 
 # Image credits

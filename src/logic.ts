@@ -1,6 +1,6 @@
 import type { RuneClient } from "rune-games-sdk/multiplayer";
 import { setRandomPrompt } from "./lib/prompts";
-import { ROUND_1, ROUND_2, ROUND_3 } from "./lib/rounds";
+import { ROUND_1, ROUND_2, ROUND_3, ROUND_4 } from "./lib/rounds";
 
 export interface GameState {
   scores: Record<string, number>;
@@ -22,7 +22,6 @@ export interface GameState {
 
 type GameActions = {
   handleClick: (params: { direction: string; player: string }) => void;
-  gameStarted: () => void;
 };
 
 declare global {
@@ -83,13 +82,6 @@ Rune.initLogic({
         });
       }
     },
-    gameStarted: (_, { game, allPlayerIds }) => {
-      game.gameStarted = true;
-      for (const player of allPlayerIds) {
-        game.roundStartAt[player] = Rune.gameTimeInSeconds();
-        game.prompts[player] = setRandomPrompt();
-      }
-    },
   },
   update: ({ game, allPlayerIds }) => {
     for (let i = 0; i < allPlayerIds.length; i++) {
@@ -106,6 +98,9 @@ Rune.initLogic({
           });
         } else {
           switch (true) {
+            case game.scores[allPlayerIds[i]] > 170:
+              game.subtractBy[allPlayerIds[i]] = ROUND_4;
+              break;
             case game.scores[allPlayerIds[i]] > 120:
               game.subtractBy[allPlayerIds[i]] = ROUND_3;
               break;
@@ -137,15 +132,7 @@ Rune.initLogic({
     },
     playerLeft(playerId, { game }) {
       // Handle player left
-      // const idx = game.playerIds.indexOf(playerId);
-      // game.playerIds.splice(idx, 1);
 
-      // for (let i = 0; i < game.playerIds.length; i++) {
-      //   game.scores[game.playerIds[i]] = 0;
-      //   game.time[game.playerIds[i]] = ROUND_1;
-      //   game.roundStartAt[game.playerIds[i]] = Rune.gameTimeInSeconds();
-      //   game.prompts[game.playerIds[i]] = setRandomPrompt();
-      // }
       if (playerId in game.scores) {
         delete game.scores[playerId];
       }

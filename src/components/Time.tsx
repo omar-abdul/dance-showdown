@@ -4,14 +4,10 @@ import AlarmClock from "./Clock";
 
 const timeLeftTextStyle = new PIXI.TextStyle({
   fontFamily: "Arial",
-  fontSize: 16,
-  fill: "#ffffff", //
-  stroke: "#000000",
-  strokeThickness: 2,
-  dropShadow: true,
-  dropShadowColor: "#000000",
-  dropShadowBlur: 4,
-  dropShadowDistance: 2,
+  fontSize: 12,
+  fill: "#673AB7", //
+  stroke: "#ffffff",
+  strokeThickness: 3,
 });
 
 function TimeBox({
@@ -23,12 +19,14 @@ function TimeBox({
   innerWidth: number;
   uiElements: any;
 }) {
+  const x = innerWidth - 45;
+  const y = 10;
   return (
     <>
-      <AlarmClock innerWidth={innerWidth} uiElements={uiElements} />
+      <AlarmClock x={x} y={y} uiElements={uiElements} />
 
       <Text
-        text={`${timeLeft}s`}
+        text={`${timeLeft.toFixed(2)}s`}
         style={
           timeLeft <= 3
             ? ({
@@ -37,8 +35,8 @@ function TimeBox({
               } as PIXI.TextStyle)
             : timeLeftTextStyle
         }
-        x={innerWidth - 30}
-        y={10}
+        x={x}
+        y={y}
       />
     </>
   );
