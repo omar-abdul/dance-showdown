@@ -18,6 +18,7 @@ export interface GameState {
   subtractBy: Record<string, number>;
   gameStarted: boolean;
   freeRound: Record<string, boolean>;
+  screenWords: Record<string, string>;
 }
 
 type GameActions = {
@@ -26,6 +27,18 @@ type GameActions = {
 
 declare global {
   const Rune: RuneClient<GameState, GameActions>;
+}
+
+function randomSentence(): string {
+  const list = [
+    "Good Job",
+    "Great Work",
+    "Triple Threat!!!",
+    "You Got This",
+    "Look at you Go!",
+    "On a Roll",
+  ];
+  return list[Math.floor(Math.random() * list.length)];
 }
 
 Rune.initLogic({
@@ -38,6 +51,8 @@ Rune.initLogic({
     const roundStartAt: Record<string, number> = {};
     const subtractBy: Record<string, number> = {};
     const freeRound: Record<string, boolean> = {};
+    const screenWords: Record<string, string> = {};
+
     for (const players of playerIds) {
       scores[players] = 0;
       prompts[players] = setRandomPrompt();
@@ -45,6 +60,7 @@ Rune.initLogic({
       roundStartAt[players] = Rune.gameTimeInSeconds();
       subtractBy[players] = ROUND_1;
       freeRound[players] = true;
+      screenWords[players] = "";
     }
 
     return {
@@ -55,12 +71,14 @@ Rune.initLogic({
       gameOver: false,
       subtractBy,
       playerIds,
-      songNumber: Math.ceil(Math.random() * 2),
+      songNumber:
+        Math.ceil(Math.random() * 2) === 0 ? 1 : Math.ceil(Math.random() * 2),
       fail: false,
       prompts,
       time,
       gameStarted: false,
       freeRound,
+      screenWords,
     };
   },
   actions: {
@@ -72,6 +90,7 @@ Rune.initLogic({
         game.time[player] = game.subtractBy[player];
         game.fail = false;
         game.gameOver = false;
+        game.screenWords[player] = randomSentence();
         if (game.scores[player] > 30) game.freeRound[player] = false;
       } else {
         game.gameOver = true;
@@ -111,34 +130,29 @@ Rune.initLogic({
               game.subtractBy[allPlayerIds[i]] = ROUND_1;
           }
 
-          game.time[allPlayerIds[i]] =
+          game.time[allPlayerIds[i]] = Number(
             game.subtractBy[allPlayerIds[i]] -
-            (Rune.gameTimeInSeconds() - game.roundStartAt[allPlayerIds[i]]);
+              (Rune.gameTimeInSeconds() - game.roundStartAt[allPlayerIds[i]])
+          );
         }
       }
     }
   },
   events: {
-    playerJoined: (playerId, { game }) => {
+    playerJoined: (_, { game, allPlayerIds }) => {
       // Handle player joined
       if (game.gameOver) return;
-      console.log(`game object ${JSON.stringify(game)}`);
 
-      // for (const i in allPlayerIds) {
-      //   game.scores[allPlayerIds[i]] = 0;
-      //   game.time[allPlayerIds[i]] = ROUND_1;
-      //   game.roundStartAt[allPlayerIds[i]] = Rune.gameTimeInSeconds();
-      //   game.prompts[allPlayerIds[i]] = setRandomPrompt();
-      //   game.freeRound[allPlayerIds[i]] = true;
-      //   game.subtractBy[allPlayerIds[i]] = ROUND_1;
-      // }
-      game.scores[playerId] = 0;
-      game.time[playerId] = ROUND_1;
-      game.roundStartAt[playerId] = Rune.gameTimeInSeconds();
-      game.prompts[playerId] = setRandomPrompt();
-      game.freeRound[playerId] = true;
-      game.subtractBy[playerId] = ROUND_1;
+      for (const i in allPlayerIds) {
+        game.scores[allPlayerIds[i]] = 0;
+        game.time[allPlayerIds[i]] = ROUND_1;
+        game.roundStartAt[allPlayerIds[i]] = Rune.gameTimeInSeconds();
+        game.prompts[allPlayerIds[i]] = setRandomPrompt();
+        game.freeRound[allPlayerIds[i]] = true;
+        game.subtractBy[allPlayerIds[i]] = ROUND_1;
+      }
     },
+
     playerLeft(playerId, { game }) {
       // Handle player left
 

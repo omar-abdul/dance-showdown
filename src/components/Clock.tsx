@@ -1,5 +1,5 @@
 import { Sprite } from "@pixi/react";
-// import clock from "../assets/images/clock.png";
+import * as PIXI from "pixi.js";
 
 function AlarmClock({
   x,
@@ -8,12 +8,12 @@ function AlarmClock({
 }: {
   x: number;
   y: number;
-  uiElements: any;
+  uiElements: Record<string, PIXI.Texture<PIXI.Resource>>;
 }) {
   return (
     <>
       {uiElements?.clock && (
-        <Sprite x={x - 30} y={y - 5} texture={uiElements?.clock} />
+        <Sprite x={x - 20} y={y - 5} texture={uiElements?.clock} scale={0.7} />
       )}
     </>
   );

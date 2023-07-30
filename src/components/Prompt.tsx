@@ -2,6 +2,7 @@ import { Container, Sprite } from "@pixi/react";
 import { useEffect, useState } from "react";
 import { ROUND_1, ROUND_2, ROUND_3, ROUND_4 } from "../lib/rounds";
 import RoundedRect from "./RoundedRect";
+import * as PIXI from "pixi.js";
 
 function Prompt({
   direction,
@@ -16,7 +17,7 @@ function Prompt({
   x: number;
   y: number;
   roundNumber: number;
-  uiElements: any;
+  uiElements: Record<string, PIXI.Texture<PIXI.Resource>>;
   freeRound: boolean;
   playerId: string;
 }) {

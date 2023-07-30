@@ -1,5 +1,6 @@
 import { Sprite } from "@pixi/react";
 import { useEffect, useState } from "react";
+import * as PIXI from "pixi.js";
 
 function ArrowIcon({
   direction,
@@ -13,7 +14,7 @@ function ArrowIcon({
   x: number;
   y: number;
   playerId: string;
-  uiElements: any;
+  uiElements: Record<string, PIXI.Texture<PIXI.Resource>>;
   handleClick: ({
     direction,
     playerId,
@@ -23,7 +24,7 @@ function ArrowIcon({
   }) => void;
 }) {
   const [isPressed, setPressed] = useState<boolean>(false);
-  const [image, setImage] = useState<any>();
+  const [image, setImage] = useState<PIXI.Texture<PIXI.Resource>>();
   function handleArrowClick(direction: string, player: string) {
     setPressed(true);
     handleClick({ direction, playerId: player });
@@ -34,7 +35,9 @@ function ArrowIcon({
 
   useEffect(() => {
     const imageName = isPressed ? `${direction}_pressed` : direction;
-    setImage(uiElements[imageName as keyof typeof uiElements]);
+    setImage(
+      uiElements[imageName as never as keyof PIXI.Texture<PIXI.Resource>]
+    );
   }, [direction, isPressed, uiElements]);
 
   return (

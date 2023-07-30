@@ -17,9 +17,9 @@ function TimeBox({
 }: {
   timeLeft: number;
   innerWidth: number;
-  uiElements: any;
+  uiElements: Record<string, PIXI.Texture<PIXI.Resource>>;
 }) {
-  const x = innerWidth - 45;
+  const x = innerWidth - 15;
   const y = 10;
   return (
     <>
@@ -35,8 +35,8 @@ function TimeBox({
               } as PIXI.TextStyle)
             : timeLeftTextStyle
         }
-        x={x}
-        y={y}
+        x={x - 30}
+        y={y + 10}
       />
     </>
   );

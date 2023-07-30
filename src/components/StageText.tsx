@@ -16,25 +16,12 @@ const rewardTextStyle = new PIXI.TextStyle({
   align: "center",
 });
 
-function FadingText({
-  text,
-  x,
-  y,
-  isShowing,
-  playerId,
-}: {
-  text: string;
-  x: number;
-  y: number;
-  isShowing: { playerId: string; isShowing: boolean };
-  playerId: string;
-}) {
+function FadingText({ text, x, y }: { text: string; x: number; y: number }) {
   const [alpha, setAlpha] = useState<number>(1);
 
   // Calculate the total interval based on the fadeInDuration
 
   useEffect(() => {
-    if (!isShowing.isShowing) return;
     const fadeValues = [1, 0.75, 0.5, 0.25, 0];
     const value = [...fadeValues];
     const interval = setInterval(() => {
@@ -44,13 +31,18 @@ function FadingText({
 
     // Clear the interval when the component unmounts
     return () => clearInterval(interval);
-  }, [isShowing.isShowing]);
+  }, [text]);
 
   return (
     <>
-      {isShowing.isShowing && playerId === isShowing.playerId && (
-        <Text text={text} style={rewardTextStyle} alpha={alpha} x={x} y={y} />
-      )}
+      <Text
+        text={text}
+        style={rewardTextStyle}
+        alpha={alpha}
+        x={x}
+        y={y}
+        anchor={0.5}
+      />
     </>
   );
 }

@@ -46,16 +46,12 @@ function DanceStage() {
     []
   );
   const [keyValue, setKeyValue] = useState<number>(0);
-  const [fadingText, setFadingText] = useState<string>("");
-  const [isShowing, setIsShowing] = useState<{
-    playerId: string;
-    isShowing: boolean;
-  }>();
 
   const [bg, setBg] = useState<PIXI.Texture<PIXI.Resource>>();
 
   const [crowdSprite, setCrowdSprite] = useState<PIXI.Texture<PIXI.Resource>>();
-  const [uiElements, setUIElements] = useState<PIXI.Texture<PIXI.Resource>>();
+  const [uiElements, setUIElements] =
+    useState<Record<string, PIXI.Texture<PIXI.Resource>>>();
 
   const [stageLight, setStageLight] = useState<PIXI.Texture<PIXI.Resource>[]>(
     []
@@ -150,7 +146,7 @@ function DanceStage() {
     }
 
     function checkKey(e: KeyboardEvent) {
-      let direction = "";
+      let direction;
       console.log(e.key === "ArrowLeft");
       switch (e.key) {
         case "ArrowLeft":
@@ -166,10 +162,12 @@ function DanceStage() {
           direction = "up";
           break;
       }
+      if (!direction) return;
       handleArrowClick({ direction, playerId });
     }
 
     window.addEventListener("resize", resize);
+    window.focus();
     window.addEventListener("keydown", checkKey);
 
     return () => {
@@ -179,11 +177,12 @@ function DanceStage() {
   }, [playerId, handleArrowClick]);
 
   useEffect(() => {
-    game?.songNumber &&
-      !game.gameOver &&
-      sound[`song${game.songNumber}` as keyof typeof sound].play();
-    if (game?.gameOver && game?.songNumber) {
-      sound[`song${game?.songNumber}` as keyof typeof sound].stop();
+    if (game?.songNumber) {
+      console.log("song number" + game.songNumber);
+      sound[`song${game?.songNumber}` as keyof typeof sound].play();
+      if (game?.gameOver) {
+        sound[`song${game?.songNumber}` as keyof typeof sound].stop();
+      }
     }
   }, [game?.songNumber, game?.gameOver]);
 
@@ -198,26 +197,12 @@ function DanceStage() {
         }
 
         setPlayers(players);
-        if (action?.action === "handleClick" && newGame.fail === false) {
+        if (
+          action?.action === "handleClick" &&
+          newGame.fail === false &&
+          yourPlayerId
+        ) {
           sound.cheer.play();
-
-          const list = [
-            "Good Job",
-            "Great Work",
-            "Triple Threat!!!",
-            "You Got This",
-            "Look at you Go!",
-            "On a Roll",
-          ];
-          const text = list[Math.floor(Math.random() * list.length)];
-          yourPlayerId &&
-            setIsShowing({ playerId: yourPlayerId, isShowing: true });
-
-          setFadingText(() => text);
-          yourPlayerId &&
-            setTimeout(() => {
-              setIsShowing({ playerId: yourPlayerId, isShowing: false });
-            }, 500);
         } else if (action?.action === "handleClick" && newGame.fail == true) {
           sound.cheer.stop();
           sound.gasp.play();
@@ -345,13 +330,11 @@ function DanceStage() {
 
             {/* UI elements */}
 
-            {isShowing && (
+            {game?.screenWords[playerId] && (
               <FadingText
-                x={innerWidth / 2 - 40}
-                y={120}
-                text={fadingText}
-                isShowing={isShowing}
-                playerId={playerId}
+                x={innerWidth / 2}
+                y={115}
+                text={game?.screenWords[playerId]}
               />
             )}
 
@@ -368,7 +351,7 @@ function DanceStage() {
                 }
               />
             )}
-            {timeLeft && (
+            {timeLeft && uiElements && (
               <TimeBox
                 timeLeft={timeLeft}
                 innerWidth={innerWidth}
