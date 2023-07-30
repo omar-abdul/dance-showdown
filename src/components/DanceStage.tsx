@@ -180,6 +180,7 @@ function DanceStage() {
 
   useEffect(() => {
     game?.songNumber &&
+      !game.gameOver &&
       sound[`song${game.songNumber}` as keyof typeof sound].play();
     if (game?.gameOver && game?.songNumber) {
       sound[`song${game?.songNumber}` as keyof typeof sound].stop();
@@ -221,7 +222,7 @@ function DanceStage() {
           sound.cheer.stop();
           sound.gasp.play();
         }
-        if (newGame.gameOver) sound.gasp.play();
+        if (newGame?.gameOver) sound.gasp.play();
       },
     });
   }, []);
@@ -317,6 +318,7 @@ function DanceStage() {
                 uiElements={uiElements}
                 key={keyValue}
                 freeRound={game?.freeRound[playerId]}
+                playerId={playerId}
               />
             )}
 

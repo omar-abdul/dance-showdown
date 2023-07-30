@@ -84,7 +84,7 @@ Rune.initLogic({
     },
   },
   update: ({ game, allPlayerIds }) => {
-    for (let i = 0; i < allPlayerIds.length; i++) {
+    for (const i in allPlayerIds) {
       if (game.freeRound[allPlayerIds[i]]) return;
       else {
         if (
@@ -122,13 +122,22 @@ Rune.initLogic({
     playerJoined: (playerId, { game }) => {
       // Handle player joined
       if (game.gameOver) return;
-      if (playerId) game.playerIds.push(playerId);
-      for (let i = 0; i < game.playerIds.length; i++) {
-        game.scores[game.playerIds[i]] = 0;
-        game.time[game.playerIds[i]] = ROUND_1;
-        game.roundStartAt[game.playerIds[i]] = Rune.gameTimeInSeconds();
-        game.prompts[game.playerIds[i]] = setRandomPrompt();
-      }
+      console.log(`game object ${JSON.stringify(game)}`);
+
+      // for (const i in allPlayerIds) {
+      //   game.scores[allPlayerIds[i]] = 0;
+      //   game.time[allPlayerIds[i]] = ROUND_1;
+      //   game.roundStartAt[allPlayerIds[i]] = Rune.gameTimeInSeconds();
+      //   game.prompts[allPlayerIds[i]] = setRandomPrompt();
+      //   game.freeRound[allPlayerIds[i]] = true;
+      //   game.subtractBy[allPlayerIds[i]] = ROUND_1;
+      // }
+      game.scores[playerId] = 0;
+      game.time[playerId] = ROUND_1;
+      game.roundStartAt[playerId] = Rune.gameTimeInSeconds();
+      game.prompts[playerId] = setRandomPrompt();
+      game.freeRound[playerId] = true;
+      game.subtractBy[playerId] = ROUND_1;
     },
     playerLeft(playerId, { game }) {
       // Handle player left

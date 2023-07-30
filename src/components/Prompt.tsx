@@ -10,6 +10,7 @@ function Prompt({
   roundNumber,
   uiElements,
   freeRound,
+  playerId,
 }: {
   direction: string;
   x: number;
@@ -17,10 +18,12 @@ function Prompt({
   roundNumber: number;
   uiElements: any;
   freeRound: boolean;
+  playerId: string;
 }) {
   const [isHidden, setIsHidden] = useState<boolean>(false);
 
   useEffect(() => {
+    if (freeRound && playerId) return;
     if (!freeRound) {
       if (uiElements) {
         let timeOut: number = ROUND_1;
@@ -34,7 +37,7 @@ function Prompt({
         }, timeOut);
       }
     }
-  }, [direction, roundNumber, uiElements, freeRound]);
+  }, [direction, roundNumber, uiElements, freeRound, playerId]);
 
   return (
     <>
