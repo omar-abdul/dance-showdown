@@ -57,6 +57,8 @@ function DanceStage() {
     []
   );
 
+  const [songNumber, setSongNumber] = useState<number>();
+
   const containerRef = useRef(null);
 
   const { gameOver } = game ?? {};
@@ -127,7 +129,7 @@ function DanceStage() {
 
       gameOver === false && setKeyValue(Math.random() * 1e6);
     },
-    [gameOver] // Add the dependencies here (if any) that should trigger a recreation of the memoized function
+    [gameOver]
   );
 
   useEffect(() => {
@@ -147,7 +149,7 @@ function DanceStage() {
 
     function checkKey(e: KeyboardEvent) {
       let direction;
-      console.log(e.key === "ArrowLeft");
+
       switch (e.key) {
         case "ArrowLeft":
           direction = "left";
@@ -177,14 +179,15 @@ function DanceStage() {
   }, [playerId, handleArrowClick]);
 
   useEffect(() => {
-    if (game?.songNumber) {
-      console.log("song number" + game.songNumber);
-      sound[`song${game?.songNumber}` as keyof typeof sound].play();
-      if (game?.gameOver) {
-        sound[`song${game?.songNumber}` as keyof typeof sound].stop();
-      }
+    for (let i = 1; i <= 2; i++) {
+      sound[`song${i}` as keyof typeof sound].stop();
     }
-  }, [game?.songNumber, game?.gameOver]);
+    if (game?.gameOver && songNumber) {
+      sound[`song${songNumber}` as keyof typeof sound].stop();
+    } else if (songNumber && game?.gameOver === false) {
+      sound[`song${songNumber}` as keyof typeof sound].play();
+    }
+  }, [game?.gameOver, songNumber]);
 
   useEffect(() => {
     Rune.initClient({
@@ -207,10 +210,18 @@ function DanceStage() {
           sound.cheer.stop();
           sound.gasp.play();
         }
-        if (newGame?.gameOver) sound.gasp.play();
+
+        if (newGame?.gameOver) {
+          sound.gasp.play();
+        }
       },
     });
   }, []);
+  useEffect(() => {
+    const num =
+      Math.ceil(Math.random() * 2) === 0 ? 1 : Math.ceil(Math.random() * 2);
+    setSongNumber(num);
+  }, [game?.gameOver]);
 
   const totalIcons = 4; // Total number of icons
   const iconWidth = 48; // Width of each icon

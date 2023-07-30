@@ -116,6 +116,7 @@ Rune.initLogic({
             players: game.scores,
           });
         } else {
+          game.gameOver = false;
           switch (true) {
             case game.scores[allPlayerIds[i]] > 170:
               game.subtractBy[allPlayerIds[i]] = ROUND_4;
