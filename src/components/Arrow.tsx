@@ -15,19 +15,13 @@ function ArrowIcon({
   y: number;
   playerId: string;
   uiElements: Record<string, PIXI.Texture<PIXI.Resource>>;
-  handleClick: ({
-    direction,
-    playerId,
-  }: {
-    direction: string;
-    playerId: string;
-  }) => void;
+  handleClick: ({ direction }: { direction: string }) => void;
 }) {
   const [isPressed, setPressed] = useState<boolean>(false);
   const [image, setImage] = useState<PIXI.Texture<PIXI.Resource>>();
-  function handleArrowClick(direction: string, player: string) {
+  function handleArrowClick(direction: string) {
     setPressed(true);
-    handleClick({ direction, playerId: player });
+    handleClick({ direction });
     setTimeout(() => {
       setPressed(false);
     }, 200);
@@ -49,7 +43,7 @@ function ArrowIcon({
           x={x}
           y={y}
           scale={0.2}
-          pointertap={() => handleArrowClick(direction, playerId)}
+          pointertap={() => handleArrowClick(direction)}
           eventMode="static"
         />
       )}

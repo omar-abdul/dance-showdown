@@ -39,12 +39,7 @@ function DanceStage() {
   const [isSwiping, setIsSwiping] = useState<boolean>(false);
   const [innerWidth, setInnerWidth] = useState<number>(window.innerWidth);
   const [innerHeight, setInnerHeight] = useState<number>(window.innerHeight);
-  const [danceFrames, setDanceFrames] = useState<PIXI.Texture<PIXI.Resource>[]>(
-    []
-  );
-  const [failFrames, setFailFrames] = useState<PIXI.Texture<PIXI.Resource>[]>(
-    []
-  );
+
   const [keyValue, setKeyValue] = useState<number>(0);
 
   const [bg, setBg] = useState<PIXI.Texture<PIXI.Resource>>();
@@ -61,7 +56,6 @@ function DanceStage() {
 
   const containerRef = useRef(null);
 
-  const { gameOver } = game ?? {};
   const round = game?.subtractBy[playerId];
 
   const animatedSpriteRef: Ref<PIXI.AnimatedSprite> = useRef(null);
@@ -83,7 +77,7 @@ function DanceStage() {
       } catch (error) {
         console.error(error);
       }
-      // loadScreen();
+
     }
     load();
   }, []);
@@ -94,17 +88,11 @@ function DanceStage() {
         const background = await PIXI.Assets.loadBundle("background");
         setBg(background.stage);
         setCrowdSprite(background.crowd);
-        const { spritesheet } = await PIXI.Assets.loadBundle("character");
-        const character = await new PIXI.Spritesheet(
-          PIXI.BaseTexture.from(spritesheet.data.meta.image),
-          spritesheet.data
-        );
-        await character.parse();
+ 
 
         const UI = await PIXI.Assets.loadBundle("ui_elements");
         setUIElements(UI);
-        setDanceFrames(character.animations.dance);
-        setFailFrames(character.animations.fail);
+
 
         const stageFrame = await new PIXI.Spritesheet(
           PIXI.BaseTexture.from(background.spotlight.data.meta.image),
@@ -123,24 +111,16 @@ function DanceStage() {
     loadGame();
   }, []);
   const handleArrowClick = useCallback(
-    ({ direction, playerId }: { direction: string; playerId: string }) => {
-      if (gameOver) return;
+    ({ direction }: { direction: string }) => {
+      if (game?.gameOver) return;
       Rune.actions.handleClick({ direction, player: playerId });
 
-      gameOver === false && setKeyValue(Math.random() * 1e6);
+      game?.gameOver === false && setKeyValue(Math.random() * 1e6);
     },
-    [gameOver]
+    [game?.gameOver, playerId]
   );
 
-  useEffect(() => {
-    if (!game?.gameOver) {
-      setFrames(danceFrames);
-    } else {
-      setFrames(failFrames);
-    }
-    game?.gameOver === false && setKeyValue(Math.random() * 1e6);
-  }, [game?.gameOver, danceFrames, failFrames]);
-
+ 
   useEffect(() => {
     function resize() {
       setInnerWidth(window.innerWidth);
@@ -165,7 +145,7 @@ function DanceStage() {
           break;
       }
       if (!direction) return;
-      handleArrowClick({ direction, playerId });
+      handleArrowClick({ direction });
     }
 
     window.addEventListener("resize", resize);
@@ -176,12 +156,10 @@ function DanceStage() {
       window.removeEventListener("resize", resize);
       window.removeEventListener("keydown", checkKey);
     };
-  }, [playerId, handleArrowClick]);
+  }, [handleArrowClick]);
 
   useEffect(() => {
-    for (let i = 1; i <= 2; i++) {
-      sound[`song${i}` as keyof typeof sound].stop();
-    }
+  
     if (game?.gameOver && songNumber) {
       sound[`song${songNumber}` as keyof typeof sound].stop();
     } else if (songNumber && game?.gameOver === false) {
@@ -190,38 +168,54 @@ function DanceStage() {
   }, [game?.gameOver, songNumber]);
 
   useEffect(() => {
-    Rune.initClient({
-      onChange: ({ newGame, yourPlayerId, action, players }) => {
-        setGame(newGame);
-        if (yourPlayerId) {
-          setPlayerId(yourPlayerId);
-
-          setTimeLeft(newGame?.time[yourPlayerId]);
-        }
-
-        setPlayers(players);
-        if (
-          action?.action === "handleClick" &&
-          newGame.fail === false &&
-          yourPlayerId
-        ) {
-          sound.cheer.play();
-        } else if (action?.action === "handleClick" && newGame.fail == true) {
-          sound.cheer.stop();
-          sound.gasp.play();
-        }
-
-        if (newGame?.gameOver) {
-          sound.gasp.play();
-        }
-      },
-    });
-  }, []);
-  useEffect(() => {
     const num =
-      Math.ceil(Math.random() * 2) === 0 ? 1 : Math.ceil(Math.random() * 2);
+    Math.ceil(Math.random() * 2) === 0 ? 1 : Math.ceil(Math.random() * 2);
     setSongNumber(num);
-  }, [game?.gameOver]);
+    
+    const getCharacter = async () => {
+      const { spritesheet } = await PIXI.Assets.loadBundle("character");
+      
+      const character = await new PIXI.Spritesheet(
+        PIXI.BaseTexture.from(spritesheet.data.meta.image),
+        spritesheet.data
+        );
+        await character.parse();
+        if (!game?.gameOver) {
+          setFrames(character.animations.dance);
+        } else {
+          setFrames(character.animations.fail);
+        }
+      };
+      getCharacter();
+    }, [game?.gameOver]);
+    useEffect(() => {
+      Rune.initClient({
+        onChange: ({ newGame, yourPlayerId, action, players }) => {
+          setGame(newGame);
+          if (yourPlayerId) {
+            setPlayerId(yourPlayerId);
+  
+            setTimeLeft(newGame?.time[yourPlayerId]);
+          }
+  
+          setPlayers(players);
+          if (
+            action?.action === "handleClick" &&
+            newGame.fail === false &&
+            yourPlayerId
+          ) {
+            sound.cheer.play();
+          } else if (action?.action === "handleClick" && newGame.fail == true) {
+            sound.cheer.stop();
+            sound.gasp.play();
+          }
+  
+          if (newGame?.gameOver) {
+            sound.gasp.play();
+          }
+        },
+      });
+    }, []);
 
   const totalIcons = 4; // Total number of icons
   const iconWidth = 48; // Width of each icon
@@ -256,7 +250,7 @@ function DanceStage() {
         direction = swipeDistanceY > 0 ? "down" : "up";
       }
 
-      handleArrowClick({ direction, playerId });
+      handleArrowClick({ direction });
       setEndPoint(undefined);
       setStartPoint(undefined);
     }
