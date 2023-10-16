@@ -6,7 +6,7 @@ function ArrowIcon({
   direction,
   x,
   y,
-  playerId,
+
   handleClick,
   uiElements,
 }: {

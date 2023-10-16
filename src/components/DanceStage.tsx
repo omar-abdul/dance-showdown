@@ -77,7 +77,6 @@ function DanceStage() {
       } catch (error) {
         console.error(error);
       }
-
     }
     load();
   }, []);
@@ -88,11 +87,9 @@ function DanceStage() {
         const background = await PIXI.Assets.loadBundle("background");
         setBg(background.stage);
         setCrowdSprite(background.crowd);
- 
 
         const UI = await PIXI.Assets.loadBundle("ui_elements");
         setUIElements(UI);
-
 
         const stageFrame = await new PIXI.Spritesheet(
           PIXI.BaseTexture.from(background.spotlight.data.meta.image),
@@ -120,7 +117,6 @@ function DanceStage() {
     [game?.gameOver, playerId]
   );
 
- 
   useEffect(() => {
     function resize() {
       setInnerWidth(window.innerWidth);
@@ -159,7 +155,6 @@ function DanceStage() {
   }, [handleArrowClick]);
 
   useEffect(() => {
-  
     if (game?.gameOver && songNumber) {
       sound[`song${songNumber}` as keyof typeof sound].stop();
     } else if (songNumber && game?.gameOver === false) {
@@ -169,53 +164,53 @@ function DanceStage() {
 
   useEffect(() => {
     const num =
-    Math.ceil(Math.random() * 2) === 0 ? 1 : Math.ceil(Math.random() * 2);
+      Math.ceil(Math.random() * 2) === 0 ? 1 : Math.ceil(Math.random() * 2);
     setSongNumber(num);
-    
+
     const getCharacter = async () => {
       const { spritesheet } = await PIXI.Assets.loadBundle("character");
-      
+
       const character = await new PIXI.Spritesheet(
         PIXI.BaseTexture.from(spritesheet.data.meta.image),
         spritesheet.data
-        );
-        await character.parse();
-        if (!game?.gameOver) {
-          setFrames(character.animations.dance);
-        } else {
-          setFrames(character.animations.fail);
+      );
+      await character.parse();
+      if (!game?.gameOver) {
+        setFrames(character.animations.dance);
+      } else {
+        setFrames(character.animations.fail);
+      }
+    };
+    getCharacter();
+  }, [game?.gameOver]);
+  useEffect(() => {
+    Rune.initClient({
+      onChange: ({ game, yourPlayerId, action, players }) => {
+        setGame(game);
+        if (yourPlayerId) {
+          setPlayerId(yourPlayerId);
+
+          setTimeLeft(game?.time[yourPlayerId]);
         }
-      };
-      getCharacter();
-    }, [game?.gameOver]);
-    useEffect(() => {
-      Rune.initClient({
-        onChange: ({ newGame, yourPlayerId, action, players }) => {
-          setGame(newGame);
-          if (yourPlayerId) {
-            setPlayerId(yourPlayerId);
-  
-            setTimeLeft(newGame?.time[yourPlayerId]);
-          }
-  
-          setPlayers(players);
-          if (
-            action?.action === "handleClick" &&
-            newGame.fail === false &&
-            yourPlayerId
-          ) {
-            sound.cheer.play();
-          } else if (action?.action === "handleClick" && newGame.fail == true) {
-            sound.cheer.stop();
-            sound.gasp.play();
-          }
-  
-          if (newGame?.gameOver) {
-            sound.gasp.play();
-          }
-        },
-      });
-    }, []);
+
+        setPlayers(players);
+        if (
+          action?.action === "handleClick" &&
+          game.fail === false &&
+          yourPlayerId
+        ) {
+          sound.cheer.play();
+        } else if (action?.action === "handleClick" && game.fail == true) {
+          sound.cheer.stop();
+          sound.gasp.play();
+        }
+
+        if (game?.gameOver) {
+          sound.gasp.play();
+        }
+      },
+    });
+  }, []);
 
   const totalIcons = 4; // Total number of icons
   const iconWidth = 48; // Width of each icon
