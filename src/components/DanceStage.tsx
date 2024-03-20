@@ -24,8 +24,7 @@ function DanceStage() {
 
   const [playerId, setPlayerId] = useState<string>("");
 
-  const [allPlayers, setPlayers] =
-    useState<string[]>();
+
   const [startPoint, setStartPoint] = useState<{
     x: number;
     y: number;
@@ -193,7 +192,7 @@ function DanceStage() {
         if (yourPlayerId === undefined) {
           setPlayerId(allPlayerIds[i]);
         }
-        setPlayers(allPlayerIds);
+
         if (
           action?.action === "handleClick" &&
           game.fail === false &&
