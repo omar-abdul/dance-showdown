@@ -25,12 +25,7 @@ function DanceStage() {
   const [playerId, setPlayerId] = useState<string>("");
 
   const [allPlayers, setPlayers] =
-    useState<
-      Record<
-        string,
-        { playerId: string; displayName: string; avatarUrl: string }
-      >
-    >();
+    useState<string[]>();
   const [startPoint, setStartPoint] = useState<{
     x: number;
     y: number;
@@ -184,16 +179,21 @@ function DanceStage() {
     getCharacter();
   }, [game?.gameOver]);
   useEffect(() => {
+    let i = -1;
     Rune.initClient({
-      onChange: ({ game, yourPlayerId, action, players }) => {
+      onChange: ({ game, yourPlayerId, action, allPlayerIds }) => {
         setGame(game);
         if (yourPlayerId) {
           setPlayerId(yourPlayerId);
 
           setTimeLeft(game?.time[yourPlayerId]);
         }
-
-        setPlayers(players);
+        i += 1;
+        i = i % allPlayerIds.length;
+        if (yourPlayerId === undefined) {
+          setPlayerId(allPlayerIds[i]);
+        }
+        setPlayers(allPlayerIds);
         if (
           action?.action === "handleClick" &&
           game.fail === false &&
@@ -314,8 +314,8 @@ function DanceStage() {
                 textures={frames}
                 animationSpeed={
                   game?.subtractBy[playerId] &&
-                  game?.subtractBy[playerId] < ROUND_2 &&
-                  !game.gameOver
+                    game?.subtractBy[playerId] < ROUND_2 &&
+                    !game.gameOver
                     ? 0.2
                     : 0.15
                 }
@@ -342,13 +342,7 @@ function DanceStage() {
               <Score
                 scores={game?.scores}
                 playerId={playerId}
-                avatar={
-                  (allPlayers &&
-                    playerId &&
-                    allPlayers[playerId as keyof typeof allPlayers]
-                      .avatarUrl) ||
-                  ""
-                }
+                avatar={playerId && Rune.getPlayerInfo(playerId).avatarUrl}
               />
             )}
             {timeLeft && uiElements && (

@@ -43,7 +43,7 @@ function randomSentence(): string {
 
 Rune.initLogic({
   minPlayers: 1,
-  maxPlayers: 4,
+  maxPlayers: 6,
   setup: (playerIds: string[]): GameState => {
     const scores: Record<string, number> = {};
     const prompts: Record<string, string> = {};
@@ -108,7 +108,7 @@ Rune.initLogic({
       else {
         if (
           game.subtractBy[allPlayerIds[i]] -
-            (Rune.gameTimeInSeconds() - game.roundStartAt[allPlayerIds[i]]) <=
+          (Rune.gameTimeInSeconds() - game.roundStartAt[allPlayerIds[i]]) <=
           0
         ) {
           game.gameOver = true;
@@ -133,7 +133,7 @@ Rune.initLogic({
 
           game.time[allPlayerIds[i]] = Number(
             game.subtractBy[allPlayerIds[i]] -
-              (Rune.gameTimeInSeconds() - game.roundStartAt[allPlayerIds[i]])
+            (Rune.gameTimeInSeconds() - game.roundStartAt[allPlayerIds[i]])
           );
         }
       }
